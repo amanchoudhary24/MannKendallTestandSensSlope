@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<br>
+<html>
+<head>
+  <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Trend Analysis</title>
+<body>
+<!-- My Code from index.html -->
+<div>
+    
+      <!--<center>
+        <h2>
+          <div id="title" style="font-family:sans-serif; color:#007bff"><b>MONTHLY TREND ANALYSIS CHART</b></div>
+        </h2>
+      </center>-->
+      <fieldset style="text-align:center">
+        <label for="csvFileInput" style="text-align:center"> 
+          <strong>Monthly CSV File:</strong>
+        </label>
+        <input type="file" id="csvFileInput" onchange="handleFiles(this.files)" accept=".csv" style="float: auto;">
+      </fieldset>
+  
+</div>
+    <div id="output"></div>
+    <div id="chartContainer1" style="height: 400px; max-width: 100%; margin: 0px center;background-image:url('https://i.ibb.co/1XtWvNb/ISROLogo.jpg');"></div>
+    <br>
+    <div id="chartContainer6" style="height: 400px; max-width: 100%; margin: 0px center;background-image:url('https://i.ibb.co/1XtWvNb/ISROLogo.jpg');"></div>
+    <legend>
+      <center>
+        <h2>
+            <div id="title1" style="font-family:sans-serif; color:#007bff"><b>SEASONAL TREND ANALYSIS CHART</b></div>
+        </h2>
+      </center>
+    </legend>
+    <fieldset style="text-align:center">
+          <label for="csvFileInput" style="text-align:center"> 
+            <strong>Seasonal CSV File:</strong>
+          </label>
+          <input type="file" id="csvFileInput" onchange="handleFiles2(this.files)"
+          accept=".csv" style="float: auto;">  
+    </fieldset>
+      <div id="chartContainer2" style="width: 49%; height: 300px;display: inline-block;"></div> 
+      <div id="chartContainer3" style="width: 49%; height: 300px;display: inline-block;"></div><br/>
+      <div id="chartContainer4" style="width: 49%; height: 300px;display: inline-block;"></div> 
+      <div id="chartContainer5" style="width: 49%; height: 300px;display: inline-block;"></div>  
+    
+  <!-- Le javascript ================================================== -->   
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="js/read-csv.js"></script>
+  <!--
+  <div>
+  <footer>
+    <center>
+      <p>&copy; IIRS|ISRO</p>
+    </center>
+  </footer>
+</div>
+-->
+</body>
+</html>
