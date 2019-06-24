@@ -1,0 +1,29 @@
+*
+* @preserve CanvasJS HTML5 & JavaScript Charts - v2.3.1 GA - https://canvasjs.com/ 
+* Copyright 2018 fenopix
+*
+*  --------------------- License Information --------------------
+* CanvasJS is a commercial product which requires purchase of license. Without a commercial license you can use it for 
+* evaluation purposes for upto 30 days. Please refer to the following link for further details.
+*     https://canvasjs.com/license/
+*
+*
+*---------------------Free for Non-Commercial Use--------------------
+* 
+*For non-commercial purposes you can use the software for free under Creative Commons Attribution-NonCommercial 3.0 License. 
+*A credit Link is added to the bottom right of the chart which should be preserved. Refer to the following link for further details on the same.
+*    http://creativecommons.org/licenses/by-nc/3.0/deed.en_US
+*
+*
+
+**This is the student license obtained to use CanvasJS charting library for displaying the charts on the webpage
+
+* CSS: Inline CSS is used in the whole program as the webtool is simple. So no external CSS file is available.
+* JavaScripts: JS files are available in ./js folder. Open it using any editor to have a look on the whole code. Its simple 
+  but little lengthy so you need to have observe the execution flow properly.
+* ./images folder contain a static logo for the background of the chart container.
+* ./datafiles is the folder that must contain all the datafiles that are to be evaluated.
+* PS: Asfa Mam is really helpful and gives enough time to complete the tasks. This web tool is progressive so you can add
+  all the further needed features by yourself.
+* PPS: I tried to keep this tools structure neat and clean but the execution memory complexity is large,good luck for your
+  improvements. You can commit the changes on  https://github.com/amanchoudhary24/MannKendallTestandSensSlope 

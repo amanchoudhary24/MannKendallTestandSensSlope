@@ -29,12 +29,21 @@ var varSUrban=0;
 var varSNonUrban=0;
 var varSAoi=0;
 
+var yearlyMeanUrban=[];
+var yearlyMeanNonUrban=[];
+var meanYears=[];
+
 var PUrban=0;
 var PNonUrban=0;
 var PAoi=0;
 var ZUrban=0;
 var ZNonUrban=0;
 var ZAoi=0;
+
+var senUrbanData=[];
+var senNonUrbanData=[];
+var slopeSenUrbanData=0.0;
+var slopeSenNonUrbanData=0.0;
 
 var dateForReference=[];
 var urbanData=[];
@@ -173,22 +182,83 @@ function parseAoiDataPoints()
 	    }   
 	return tempDataPoints;  
 }
+function getYearlyDataFromCsv(csv)
+{
+	var dataPoints = [];   
+    var csvLines=[];
+    var points=[];
+    meanYears=[];
+    yearlyMeanUrban=[];
+    yearlyMeanNonUrban=[];
+    csvLines = csv.split(/[\r?\n|\r|\n]+/);  
+    var tempPoints=[];
+    tempPoints=csvLines[0].split(","); 
+    for (var i = 1; i < csvLines.length; i++)
+                if (csvLines[i].length > 0) {
+                    points = csvLines[i].split(",");
+                    if(points[0]!="")
+                    {
+                    	meanYears.push(parseInt(points[0]));
+                    	yearlyMeanUrban.push(parseFloat(points[1]));
+                    	yearlyMeanNonUrban.push(parseFloat(points[2]));
+                    }            
+                }
+                console.log("Hello World1");
+}
+function parseYearlyMeanPointsUrban()
+{
+	var tempDataPoints=[];
+	//console.log(meanYears);
+	for(var i=0;i<yearlyMeanUrban.length;i++)
+	{
+
+		tempDataPoints.push({
+	         	x: new Date("JAN, "+meanYears[i]), 
+	         	y: yearlyMeanUrban[i],
+	       	}); 
+	}
+	                console.log("Hello World2");
+
+	return tempDataPoints;
+}
+function parseYearlyMeanPointsNonUrban()
+{
+	var tempDataPoints=[];
+	for(var i=0;i<yearlyMeanNonUrban.length;i++)
+	{
+
+		tempDataPoints.push({
+	         	x: new Date("JAN, "+meanYears[i]), 
+	         	y: yearlyMeanNonUrban[i],
+	       	}); 
+	}
+	return tempDataPoints;
+}
 function processData()
 {
 
 	var chartHeading=fileNameMonthly.substring(10,fileNameMonthly.length-4).toUpperCase()+"  ©iirs|isro";//setting file name to chart
 	//alert(chartHeading+ "");
 	var dps=[];
+	var yearlyFileName="datafiles/YEARLY "+fileNameMonthly.substring(18,fileNameMonthly.length);
+	console.log(yearlyFileName);
+	$.get(yearlyFileName,function(data)
+		{
+			getYearlyDataFromCsv(data);
+		});
 	$.get(fileNameMonthly, function(data){
 	getDataPointsFromCSV(data,10);//dummy run to initialize all the values
-
 	calcS();
 	var chartSubHeading1="";
 	var chartSubHeading2="";
-	var chartSubHeading3=""
+	var chartSubHeading3="";
+	var chartSubHeading7="";
+	var chartSubHeading8="";
 	if(ZUrban>0)
 	{
-		chartSubHeading1=" p="+PUrban+" z="+ZUrban;
+		chartSubHeading7="z="+parseFloat(ZUrban).toPrecision(4);
+		chartSubHeading8="Sens Slope="+parseFloat(slopeSenUrbanData).toPrecision(4);
+		chartSubHeading1=" p="+parseFloat(PUrban).toPrecision(4);
 		chartSubHeading2="Trend Increasing";
 		if(PUrban<0.001||PUrban<0.01||PUrban<0.05||PUrban<0.1)
 		{
@@ -213,7 +283,9 @@ function processData()
 	}
 	else
 	{
-		chartSubHeading1=" p="+ PUrban+" z="+ZUrban;
+		chartSubHeading7="z="+ZUrban;
+		chartSubHeading8="Sens Slope="+slopeSenUrbanData;
+		chartSubHeading1=" p="+ PUrban;
 		chartSubHeading2=" Trend Decreasing ";
 		if(PUrban<0.001||PUrban<0.01||PUrban<0.05||PUrban<0.1)
 		{
@@ -250,33 +322,47 @@ function processData()
 			horizontalAlign: "right",
 			verticalAlign: "top",
 			dockInsidePlotArea:false,
-			//Uncomment properties below to see how they behave
-			//fontColor: "red",
-			//fontSize: 30
 		},
 		{
-			text:chartSubHeading2,
+			text:chartSubHeading7,
 			horizontalAlign: "right",
+			fontWeight: "normal",
 			verticalAlign: "top",
-			dockInsidePlotArea:true,
+			dockInsidePlotArea:false,
+		},
+		{
+			text:chartSubHeading8,
+			horizontalAlign: "right",
+			fontWeight: "normal",
+			verticalAlign: "top",
+			dockInsidePlotArea:false,
 		},
 		{
 			text:chartSubHeading3,
 			horizontalAlign: "right",
+			fontWeight: "normal",
 			verticalAlign: "top",
 			dockInsidePlotArea:true,
 		}
 		],
-		backgroundColor: "rgba(252,251,251,.5)",
+		//backgroundColor: "rgba(252,251,251,.5)",
+		backgroundColor: "#FFFFFF",
 		exportEnabled: true,
-		zoomEnabled: true,
-		axisX: {
+		//zoomEnabled: true,
+		axisX: [{
 			title:" ",
-			valueFormatString: "MMM YYYY",
-			//interval: 3,
-			labelAngle: -80,
+			valueFormatString: "MMM",
+			
+			interval: 3,
+			labelAngle: -70,
   			intervalType: "month",
-		},
+		},{
+          title: "Years",
+          lineColor: "#ffffff",
+          tickLength: 1,
+          valueFormatString: "YYYY",
+          interval:1,
+        }],
 		axisY: {
 			title: yAxisLabel,
 			interval:10,
@@ -299,62 +385,19 @@ function processData()
 				
 			},
 			*/	
-		},/*
+		},
 		legend: {
 			cursor: "pointer",
-			verticalAlign: "top",
-			horizontalAlign: "right",
-			dockInsidePlotArea: true,
+			verticalAlign: "bottom",
+			horizontalAlign: "center",
+			dockInsidePlotArea: false,
 			itemclick: toogleDataSeries
-		},*/
-		legend: {
-			
-			cursor: "pointer",
-			itemmouseover: function(e) {
-				e.dataSeries.lineThickness = e.chart.data[e.dataSeriesIndex].lineThickness * 2;
-				e.dataSeries.markerSize = e.chart.data[e.dataSeriesIndex].markerSize + 2;
-				e.chart.render();
-			},
-			itemmouseout: function(e) {
-				e.dataSeries.lineThickness = e.chart.data[e.dataSeriesIndex].lineThickness / 2;
-				e.dataSeries.markerSize = e.chart.data[e.dataSeriesIndex].markerSize - 2;
-				e.chart.render();
-			},
-			itemclick: function (e) {
-				if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-					e.dataSeries.visible = false;
-				} else {
-					e.dataSeries.visible = true;
-				}
-				//e.chart1.render();
-		}
 		},
-		data: [/*{//AOI line
-			type:"line",
-			axisYType: "primary",
-			name: yAxisLabel,
-			//lineThickness:0,
-			lineColor: 'white',//to camoflague the line with the background
-			highlightEnabled: false,//to disable the highlight on mouse over
-			//showInLegend: true,
-			markerSize: 0,
-			yValueFormatString: "####.####",
-			dataPoints: getDataPointsFromCSV(data, 7)//Reading data from 8th column of the CSV file
-		},
-		{	//Slope Aoi Line
-			type:"line",
-			axisYType: "primary",
-			name: "Slope AOI",
-			lineThickness: 0,
-			//showInLegend: true,
-			lineColor: 'white',//to camoflague the line with the background
-			highlightEnabled: false,//to disable the highlight on mouse over
-			markerSize:0,
-			yValueFormatString: "####.####",
-			dataPoints: parseAoiDataPoints()
-		},*/
+		
+		data: [
 		{//Urban Line
 			type: "line",
+			axisXIndex:0,
 			axisYType: "primary",
 			name: lineOneLabel,
 			lineThickness:2,
@@ -366,6 +409,7 @@ function processData()
 		},
 		{//Slope Urban Line
 			type:"line",
+			axisXIndex:0,
 			axisYType: "primary",
 			name: "Slope Urban",
 			lineThickness: 0,
@@ -375,38 +419,32 @@ function processData()
 			markerSize:0,
 			yValueFormatString: "####.####",
 			dataPoints: parseUrbanDataPoints()
-		},/*
-		{//Non Urban Line
-			type: "line",
-			axisYType: "primary",
-			name: lineTwoLabel,
-			lineThickness:0,
-			showInLegend: true,
-			markerSize: 0,
-			yValueFormatString: "####.####",
-			dataPoints: getDataPointsFromCSV(data, 3)
 		},
-		{//Slope Non Urban Line
+		{//Yearly Mean Points
 			type:"line",
+			lineColor: "#000000",
+			axisXIndex:1,
+			lineThickness:1,
 			axisYType: "primary",
-			name: "Slope Non Urban",
-			lineThickness: 0,
-			//showInLegend: true,
-			lineColor: 'white',//to camoflague the line with the background
-			highlightEnabled: false,//to disable the highlight on mouse over
-			markerSize:0,
+			name: "Yearly Mean Points",
+			lineDashType: "dot",
+			showInLegend: true,
 			yValueFormatString: "####.####",
-			dataPoints: parseNonUrbanDataPoints()
-		}*/]
+			dataPoints: parseYearlyMeanPointsUrban()
+		}]
 	});
 
 	var chartSubHeading4="";
 	var chartSubHeading5="";
-	var chartSubHeading6=""
+	var chartSubHeading6="";
+	var chartSubHeading9="";
+	var chartSubHeading10="";
 	if(ZNonUrban>0)
 	{
-		chartSubHeading4=" p="+PNonUrban+" z="+ZNonUrban;
-		chartSubHeading5="Trend Increasing";
+		chartSubHeading9="Z="+ZNonUrban;
+		chartSubHeading10="Sens Slope="+slopeSenNonUrbanData;
+		chartSubHeading4=" p="+PNonUrban;
+		//chartSubHeading5="Trend Increasing";
 		if(PNonUrban<0.001||PNonUrban<0.01||PNonUrban<0.05||PNonUrban<0.1)
 		{
 			if(PNonUrban<0.001)
@@ -429,8 +467,10 @@ function processData()
 	}
 	else
 	{
-		chartSubHeading4=" p="+PNonUrban +" z="+ZNonUrban;
-		chartSubHeading5=" Trend Decreasing ";
+		chartSubHeading9="Z="+parseFloat(ZNonUrban).toPrecision(4);
+		chartSubHeading10="Sens Slope="+parseFloat(slopeSenNonUrbanData).toPrecision(4);
+		chartSubHeading4=" p="+parseFloat(PNonUrban).toPrecision(4);
+		//chartSubHeading5="Trend Increasing";
 		if(PNonUrban<0.001||PNonUrban<0.01||PNonUrban<0.05||PNonUrban<0.1)
 		{
 			if(PNonUrban<0.001)
@@ -466,15 +506,18 @@ function processData()
 			horizontalAlign: "right",
 			verticalAlign: "top",
 			dockInsidePlotArea:false,
-			//Uncomment properties below to see how they behave
-			//fontColor: "red",
-			//fontSize: 30
 		},
 		{
-			text:chartSubHeading5,
+			text:chartSubHeading9,
 			horizontalAlign: "right",
 			verticalAlign: "top",
-			dockInsidePlotArea:true,
+			dockInsidePlotArea:false,
+		},
+		{
+			text:chartSubHeading10,
+			horizontalAlign: "right",
+			verticalAlign: "top",
+			dockInsidePlotArea:false,
 		},
 		{
 			text:chartSubHeading6,
@@ -483,16 +526,23 @@ function processData()
 			dockInsidePlotArea:true,
 		}
 		],
-		backgroundColor: "rgba(252,251,251,.5)",
+		backgroundColor: "#FFFFFF",
 		exportEnabled: true,
 		zoomEnabled: true,
-		axisX: {
+		axisX: [{
 			title:" ",
-			valueFormatString: "MMM YYYY",
-			//interval: 3,
-			labelAngle: -80,
+			valueFormatString: "MMM",
+			interval: 3,
+			labelAngle: -70,
   			intervalType: "month",
 		},
+		{
+          title: "Years",
+          lineColor: "#ffffff",
+          tickLength: 1,
+          valueFormatString: "YYYY",
+          interval:1,
+        }],
 		axisY: {
 			title: yAxisLabel,
 			interval:10,
@@ -515,86 +565,16 @@ function processData()
 				
 			},
 			*/	
-		},/*
+		},
 		legend: {
 			cursor: "pointer",
-			verticalAlign: "top",
-			horizontalAlign: "right",
-			dockInsidePlotArea: true,
+			verticalAlign: "bottom",
+			horizontalAlign: "center",
+			dockInsidePlotArea: false,
 			itemclick: toogleDataSeries
-		},*/
-		legend: {
-			
-			cursor: "pointer",
-			itemmouseover: function(e) {
-				e.dataSeries.lineThickness = e.chart.data[e.dataSeriesIndex].lineThickness * 2;
-				e.dataSeries.markerSize = e.chart.data[e.dataSeriesIndex].markerSize + 2;
-				e.chart.render();
-			},
-			itemmouseout: function(e) {
-				e.dataSeries.lineThickness = e.chart.data[e.dataSeriesIndex].lineThickness / 2;
-				e.dataSeries.markerSize = e.chart.data[e.dataSeriesIndex].markerSize - 2;
-				e.chart.render();
-			},
-			itemclick: function (e) {
-				if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-					e.dataSeries.visible = false;
-				} else {
-					e.dataSeries.visible = true;
-				}
-				e.chart.render();
-		}
 		},
-		data: [/*{//AOI line
-			type:"line",
-			axisYType: "primary",
-			name: yAxisLabel,
-			//lineThickness:0,
-			lineColor: 'white',//to camoflague the line with the background
-			highlightEnabled: false,//to disable the highlight on mouse over
-			//showInLegend: true,
-			markerSize: 0,
-			yValueFormatString: "####.####",
-			dataPoints: getDataPointsFromCSV(data, 7)//Reading data from 8th column of the CSV file
-		},
-		{	//Slope Aoi Line
-			type:"line",
-			axisYType: "primary",
-			name: "Slope AOI",
-			lineThickness: 0,
-			//showInLegend: true,
-			lineColor: 'white',//to camoflague the line with the background
-			highlightEnabled: false,//to disable the highlight on mouse over
-			markerSize:0,
-			yValueFormatString: "####.####",
-			dataPoints: parseAoiDataPoints()
-		},*/
-		/*
-		{//Urban Line
-			type: "line",
-			axisYType: "primary",
-			name: lineOneLabel,
-			lineThickness:2,
-			//lineColor: 'black',
-			showInLegend: true,
-			markerSize: 0,
-			yValueFormatString: "####.####",
-			dataPoints: getDataPointsFromCSV(data, 2)//reading data from the 3rd column
-		},
-		{//Slope Urban Line
-			type:"line",
-			axisYType: "primary",
-			name: "Slope Urban",
-			lineThickness: 0,
-			//showInLegend: true,
-			lineColor: 'white',//to camoflague the line with the background
-			highlightEnabled: false,//to disable the highlight on mouse over
-			markerSize:0,
-			yValueFormatString: "####.####",
-			dataPoints: parseUrbanDataPoints()
-		},
-		*/
 		
+		data: [
 		{//Non Urban Line
 			type: "line",
 			axisYType: "primary",
@@ -616,7 +596,20 @@ function processData()
 			markerSize:0,
 			yValueFormatString: "####.####",
 			dataPoints: parseNonUrbanDataPoints()
-		}]
+		},
+		{//Yearly Mean Points
+			type:"line",
+			lineColor: "#000000",
+			axisXIndex:1,
+			lineThickness:1,
+			axisYType: "primary",
+			name: "Yearly Mean Points",
+			lineDashType: "dot",
+			showInLegend: true,
+			yValueFormatString: "####.####",
+			dataPoints: parseYearlyMeanPointsNonUrban()
+		}
+		]
 	});
 		
 		
@@ -857,6 +850,7 @@ function calcS()
 			}
 		}
 	}
+	//console.log("slopeUrbanData: "+slopeUrbanData.length+ "count: "+(18*12));
 	for(var i=0;i<slopeNonUrbanData.length;i++)
 	{
 		for(var j=i+1;j<slopeNonUrbanData.length;j++)
@@ -967,7 +961,7 @@ function calcS()
 		tiedGroupAoiSum+=(tAoi[i]*(tAoi[i]-1)*((2*tAoi[i])+5));
 	}
 	varSAoi=((n*(n-1)*((2*n)+5))/18)-tiedGroupAoiSum;
-	console.log("varSUrban: "+varSUrban+"  varSNonUrban: "+varSNonUrban);
+	//console.log("varSUrban: "+varSUrban+"  varSNonUrban: "+varSNonUrban);
 
 	if(SUrban>0)
 	{
@@ -1002,12 +996,62 @@ function calcS()
 	}
 	else
 		ZAoi=0;
-	console.log("ZUrban:"+ZUrban+"  ZNonUrban:"+ZNonUrban);
+	//console.log("ZUrban:"+ZUrban+"  ZNonUrban:"+ZNonUrban);
 
 
 	PUrban=0.3989422804*(Math.exp(-0.5*Math.pow(ZUrban,2)));
 	PNonUrban=0.3989422804*(Math.exp(-0.5*Math.pow(ZNonUrban,2)));
 	//console.log("PUrban : "+ PUrban);
+
+	//Finding sens slope for Urban Data
+	senUrbanData=[];
+	for(var i=0;i<slopeUrbanData.length;i++)
+	{
+		for(var j=i+1;j<slopeUrbanData.length;j++)
+		{
+			var dk=(slopeUrbanData[j]-slopeUrbanData[i])/(j-i);
+			senUrbanData.push(dk);
+		}
+	}
+	senUrbanData.sort(
+		function(a,b)
+		{
+			return a-b;
+		});
+	var temp=senUrbanData.length;
+	//console.log(temp);
+	if(temp%2==0)//even case
+	{
+		slopeSenUrbanData=(senUrbanData[(temp/2)-1]+senUrbanData[temp/2])/2;
+	}
+	else//odd case
+	{
+		slopeSenUrbanData=senUrbanData[temp/2];
+	}
+	//console.log("Slope"+senUrbanData[temp/2]);
+	senNonUrbanData=[];
+	for(var i=0;i<slopeNonUrbanData.length;i++)
+	{
+		for(var j=i+1;j<slopeNonUrbanData.length;j++)
+		{
+			var dk=(slopeNonUrbanData[j]-slopeNonUrbanData[i])/(j-i);
+			senNonUrbanData.push(dk);
+		}
+	}
+	temp=senNonUrbanData.length;
+	//console.log("Temp: "+temp);
+	senNonUrbanData.sort(function(a,b)
+		{
+			return a-b;
+		});
+	if(temp%2==0)//even case
+	{
+		slopeSenNonUrbanData=(senNonUrbanData[(temp/2)-1]+senNonUrbanData[temp/2])/2;
+	}
+	else//odd case
+	{
+		slopeSenNonUrbanData=senNonUrbanData[temp/2];
+	}
 }
 function processData2()
 {
@@ -1032,6 +1076,7 @@ function processData2()
 				],
 				exportEnabled: true,
 				zoomEnabled: true,
+				backgroundColor: "#FFFFFF",
 				axisX:
 				{
 					title: " Year ",
@@ -1095,6 +1140,7 @@ function processData2()
 				},
 				exportEnabled: true,
 				zoomEnabled: true,
+				backgroundColor: "#FFFFFF",
 				axisX:
 				{
 					title: " Year ",
@@ -1157,6 +1203,7 @@ function processData2()
 				},
 				exportEnabled: true,
 				zoomEnabled: true,
+				backgroundColor: "#FFFFFF",
 				axisX:
 				{
 					title: " Year ",
@@ -1219,6 +1266,7 @@ function processData2()
 				},
 				exportEnabled: true,
 				zoomEnabled: true,
+				backgroundColor: "#FFFFFF",
 				axisX:
 				{
 					title: " Year ",

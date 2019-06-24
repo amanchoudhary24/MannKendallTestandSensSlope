@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<br>
+<html>
+<head>
+  <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Trend Analysis</title>
+<body style="background-color:#007bff ">
+<!-- My Code from index.html -->
+    
+      <!--<center>
+        <h2>
+          <div id="title" style="font-family:sans-serif; color:#007bff"><b>MONTHLY TREND ANALYSIS CHART</b></div>
+        </h2>
+      </center>-->
+      <div id="heading1" style="box-shadow: 5px 0px 15px 5px #000000;background-color:#ffffff">
+      <fieldset style="text-align:center;">
+        <legend style="text-align: left;">
+      
+        <h2>
+            <div id="title1" style="font-family:sans-serif; color:#007; text-align: left; "><b>MONTHLY TREND ANALYSIS CHART</b></div>
+        </h2>
+      
+    </legend>
+        <label for="csvFileInput" style="text-align:center;font-size:22px;"> 
+          <strong>Monthly CSV File:</strong>
+        </label>
+        <input type="file" id="csvFileInput" onchange="handleFiles(this.files)" accept=".csv" style="float: auto;font-size:22px;">
+      </fieldset>
+      </div>
+      <br>
+    <div id="output" style="background-color:#ffffff;"></div>
+    <div id="chartContainer1" style="height: 500px; max-width: 98%; display: block;background-color:#ffffff;margin-left: auto;margin-right: auto;background-image:url('images/logo.png');background-repeat: no-repeat;background-position: center center; box-shadow: 5px 5px 15px 5px #000000;"></div>
+    <br>
+    <div id="chartContainer6" style="height: 500px; max-width: 98%; display: block;background-color:#ffffff;margin-left: auto;margin-right: auto;background-image:url('images/logo.png');background-repeat: no-repeat;background-position: center center; box-shadow: 5px 5px 15px 5px #000000;"></div>
+    <br>
+    <div id="heading2" style="box-shadow: 5px 0px 15px 5px #000000;background-color:#ffffff">
+    <fieldset style="text-align:center">
+      <legend style="text-align:left">
+      <center>
+        <h2>
+            <div id="title1" style="font-family:sans-serif; color:#007;text-align: left;"><b>SEASONAL TREND ANALYSIS CHART</b></div>
+        </h2>
+      </center>
+    </legend>
+          <label for="csvFileInput" style="text-align:center;font-size:22px;"> 
+            <strong>Seasonal CSV File:</strong>
+          </label>
+          <input type="file" id="csvFileInput" onchange="handleFiles2(this.files)"
+          accept=".csv" style="float: auto;font-size:22px;">  
+    </fieldset>
+  </div>
+  <br>
+      <div id="chartContainer2" style="width: 50%; height: 300px;display: inline-block;background-color:#ffffff;margin-left: auto;margin-right: auto;background-image:url('images/logo.png');background-repeat: no-repeat;background-position: center center; box-shadow: -5px -5px 15px 5px #000000;"></div> 
+      <div id="chartContainer3" style="width: 49.5%; height: 300px;display: inline-block;background-color:#ffffff;margin-left: auto;margin-right: auto;background-image:url('images/logo.png');background-repeat: no-repeat;background-position: center center; box-shadow: 5px -5px 15px 5px #000000;"></div><br/>
+      <div id="chartContainer4" style="width: 50%; height: 300px;display: inline-block;background-color:#ffffff;margin-left: auto;margin-right: auto;background-image:url('images/logo.png');background-repeat: no-repeat;background-position: center center; box-shadow: -5px 5px 15px 5px #000000;"></div> 
+      <div id="chartContainer5" style="width: 49.5%; height: 300px;display: inline-block;background-color:#ffffff;margin-left: auto;margin-right: auto;background-image:url('images/logo.png');background-repeat: no-repeat;background-position: center center; box-shadow: 5px 5px 15px 5px #000000;"></div>  
+    
+  <!-- Le javascript ================================================== -->   
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="js/read-csv.js"></script>
+  <!--
+  <div>
+  <footer>
+    <center>
+      <p>&copy; IIRS|ISRO</p>
+    </center>
+  </footer>
+</div>
+-->
+</body>
+</html>
