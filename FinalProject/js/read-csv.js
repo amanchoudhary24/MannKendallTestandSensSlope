@@ -45,6 +45,16 @@ var senNonUrbanData=[];
 var slopeSenUrbanData=0.0;
 var slopeSenNonUrbanData=0.0;
 
+var yearForReference=[];
+var djfUrbanData=[];
+var djfNonUrbanData=[];
+var mamUrbanData=[];
+var mamNonUrbanData=[];
+var jjaUrbanData=[];
+var jjaNonUrbanData=[];
+var sonUrbanData=[];
+var sonNonUrbanData=[];
+
 var slopeSendjfUrbanData=0.0;
 var slopeSendjfNonUrbanData=0.0;
 var slopeSenmamUrbanData=0.0;
@@ -83,6 +93,19 @@ var PjjaUrban=0;
 var PjjaNonUrban=0;
 var PsonUrban=0;
 var PsonNonUrban=0;
+
+var SdjfUrban;
+var SdjfNonUrban;
+var SmamUrban;
+var SmamNonUrban;
+var SjjaUrban;
+var SjjaNonUrban;
+var SsonUrban;
+var SsonNonUrban;
+
+var tUrban=[];
+var tNonUrban=[];
+var tAoi=[];
 
 function handleFiles(files){
 	// Check for the various File API support.
@@ -657,16 +680,6 @@ function handleFiles2(files){
 		alert('FileReader are not supported in this browser.');
 	}	
 }
-var yearForReference=[];
-var djfUrbanData=[];
-var djfNonUrbanData=[];
-var mamUrbanData=[];
-var mamNonUrbanData=[];
-var jjaUrbanData=[];
-var jjaNonUrbanData=[];
-var sonUrbanData=[];
-var sonNonUrbanData=[];
-
 function getDataPointsFromFile(csv,index){
 	yearForReference=[];
 	mamUrbanData=[];
@@ -820,10 +833,6 @@ function parseSonUrbanDataPoints(){
 	}
 	return tempDataPoints;
 }
-
-var tUrban=[];
-var tNonUrban=[];
-var tAoi=[];
 
 function calcS(){
 	tUrban=[];
@@ -1058,14 +1067,6 @@ function calcS(){
 		slopeSenNonUrbanData=senNonUrbanData[temp/2];
 	}
 }
-var SdjfUrban;
-var SdjfNonUrban;
-var SmamUrban;
-var SmamNonUrban;
-var SjjaUrban;
-var SjjaNonUrban;
-var SsonUrban;
-var SsonNonUrban;
 
 function calcDataForSeasonalAnalysis()
 {
@@ -1142,7 +1143,6 @@ function calcDataForSeasonalAnalysis()
 			else if((sonNonUrbanData[j]-sonNonUrbanData[i])<0)
 				SsonNonUrban-=1;
 		}
-//console.log("S: \n"+SdjfUrban+" & "+SdjfNonUrban+"\n"+SmamUrban+" & "+SmamNonUrban+"\n"+SjjaUrban+" & "+SjjaNonUrban+"\n"+SsonUrban+" & "+SsonNonUrban);
 	var tempdjfUrbanData=[];
 	var tempdjfNonUrbanData=[];
 	var tempmamUrbanData=[];
@@ -1762,7 +1762,7 @@ function calcDataForSeasonalAnalysis()
 	else//odd case
 	{
 		slopeSensonUrbanData=sensonUrbanData[temp/2];
-		if(slopeSensonUrbanData.toString()=="NaN")
+		if((slopeSensonUrbanData+"").toString()=="NaN")
 			{
 				for(var i=temp/2;i<sensonUrbanData.length;i++)
 				{
@@ -1808,7 +1808,7 @@ function calcDataForSeasonalAnalysis()
 	else//odd case
 	{
 		slopeSensonNonUrbanData=sensonNonUrbanData[temp/2];
-		if(slopeSensonNonUrbanData.toString()=="NaN")
+		if((slopeSensonNonUrbanData+"").toString()=="NaN")
 			{
 				for(var i=temp/2;i<sensonNonUrbanData.length;i++)
 				{
@@ -1828,11 +1828,11 @@ function processData2(){
 			getDataPointsFromFile(data,0);//data initialisation in the arrays
 			calcS();
 			calcDataForSeasonalAnalysis();
-			chartDJF=new CanvasJS.Chart("chartContainer2",
+			chartDJFUrban=new CanvasJS.Chart("chartContainer2",
 			{
 				title:
 				{
-					text: "DJF:"+chartHeading.toUpperCase()
+					text: "Urban:DJF:"+chartHeading.toUpperCase()
 				},
 				subtitles:[
 				{
@@ -1885,21 +1885,14 @@ function processData2(){
 						highlightEnabled: true,
 						markerSize: 0,
 						dataPoints: parseDjfUrbanDataPoints()
-					},
-					{
-						type: "line",
-						name: "Non Urban :",
-						axisYType: "primary",
-						highlightEnabled: true,
-						markerSize: 0,
-						dataPoints: parseDjfNonUrbanDataPoints()
-					}]
+					}
+				]
 			});
-			chartMAM = new CanvasJS.Chart("chartContainer3",
+			chartMAMUrban = new CanvasJS.Chart("chartContainer3",
 			{
 				title:
 				{
-					text: "MAM:"+chartHeading.toUpperCase()
+					text: "Urban:MAM:"+chartHeading.toUpperCase()
 				},
 				exportEnabled: true,
 				zoomEnabled: true,
@@ -1947,22 +1940,14 @@ function processData2(){
 						highlightEnabled: true,
 						markerSize: 0,
 						dataPoints: parseMamUrbanDataPoints()
-					},
-					{
-						type: "line",
-						name: "Non Urban :",
-						axisYType: "primary",
-						highlightEnabled: true,
-						markerSize: 0,
-						dataPoints: parseMamNonUrbanDataPoints()
 					}
 				]
 			});
-			chartJJA = new CanvasJS.Chart("chartContainer4",
+			chartJJAUrban = new CanvasJS.Chart("chartContainer4",
 			{
 				title:
 				{
-					text: "JJA:"+chartHeading.toUpperCase()
+					text: "Urban:JJA:"+chartHeading.toUpperCase()
 				},
 				exportEnabled: true,
 				zoomEnabled: true,
@@ -2009,21 +1994,14 @@ function processData2(){
 						highlightEnabled: true,
 						markerSize: 0,
 						dataPoints: parseJjaUrbanDataPoints()
-					},
-					{
-						type: "line",
-						name: "Non Urban :",
-						axisYType: "primary",
-						highlightEnabled: true,
-						markerSize: 0,
-						dataPoints: parseJjaNonUrbanDataPoints()
-					}]
+					}
+				]
 			});
-			chartSON = new CanvasJS.Chart("chartContainer5",
+			chartSONUrban = new CanvasJS.Chart("chartContainer5",
 			{
 				title:
 				{
-					text: "SON:"+chartHeading.toUpperCase()
+					text: "Urban:SON:"+chartHeading.toUpperCase()
 				},
 				exportEnabled: true,
 				zoomEnabled: true,
@@ -2070,7 +2048,219 @@ function processData2(){
 						highlightEnabled: true,
 						markerSize: 0,
 						dataPoints: parseSonUrbanDataPoints()
+					}
+				]
+			});
+			chartDJFNonUrban=new CanvasJS.Chart("chartContainer10",
+			{
+				title:
+				{
+					text: "Non Urban:DJF:"+chartHeading.toUpperCase()
+				},
+				subtitles:[
+				{
+					text: "This is a Subtitle",
+				}
+				],
+				exportEnabled: true,
+				zoomEnabled: true,
+				backgroundColor: "#FFFFFF",
+				axisX:
+				{
+					title: " Year ",
+					valueFormatString: "YYYY",
+				},
+				axisY:
+				{
+					title: " ",
+					gridThickness: 0.2,
+				},
+				toolTip:
+				{
+					shared: true,
+					contentFormatter: function(e)
+					{
+						var content="";
+						for(var i=0;i<e.entries.length;i++)
+						{
+							content+=e.entries[i].dataPoint.x.getFullYear()+" ";
+							content+="<strong>"+e.entries[i].dataSeries.name+ ":"+e.entries[i].dataPoint.y+ "</strong>";
+							content+="<br>";
+						}
+						return content;
 					},
+				},
+				legend:
+				{
+					cursor: "pointer",
+					verticalAlign: "top",
+					horizontalAlign: "right",
+					dockInsidePlotArea: true,
+					itemclick: toogleDataSeries
+				},
+				data:
+				[
+					{
+						type: "line",
+						name: "Non Urban :",
+						axisYType: "primary",
+						highlightEnabled: true,
+						markerSize: 0,
+						dataPoints: parseDjfNonUrbanDataPoints()
+					}]
+			});
+			chartMAMNonUrban = new CanvasJS.Chart("chartContainer11",
+			{
+				title:
+				{
+					text: "Non Urban:MAM:"+chartHeading.toUpperCase()
+				},
+				exportEnabled: true,
+				zoomEnabled: true,
+				backgroundColor: "#FFFFFF",
+				axisX:
+				{
+					title: " Year ",
+					valueFormatString: "YYYY",
+				},
+				axisY:
+				{
+					title: " ",
+					gridThickness: 0.2,
+				},
+				toolTip:
+				{
+					shared: true,
+					
+					contentFormatter: function(e)
+					{
+						var content="";
+						for(var i=0;i<e.entries.length;i++)
+						{
+							content+=e.entries[i].dataPoint.x.getFullYear()+" ";
+							content+="<strong>"+e.entries[i].dataSeries.name+ ":"+e.entries[i].dataPoint.y+ "</strong>";
+							content+="<br>";
+						}
+						return content;
+					},	
+				},
+				legend:
+				{
+					cursor: "pointer",
+					verticalAlign: "top",
+					horizontalAlign: "right",
+					dockInsidePlotArea: true,
+					itemclick: toogleDataSeries
+				},
+				data:
+				[
+					{
+						type: "line",
+						name: "Non Urban :",
+						axisYType: "primary",
+						highlightEnabled: true,
+						markerSize: 0,
+						dataPoints: parseMamNonUrbanDataPoints()
+					}
+				]
+			});
+			chartJJANonUrban = new CanvasJS.Chart("chartContainer12",
+			{
+				title:
+				{
+					text: "Non Urban:JJA:"+chartHeading.toUpperCase()
+				},
+				exportEnabled: true,
+				zoomEnabled: true,
+				backgroundColor: "#FFFFFF",
+				axisX:
+				{
+					title: " Year ",
+					valueFormatString: "YYYY",
+				},
+				axisY:
+				{
+					title: " ",
+					gridThickness: 0.2,
+				},
+				toolTip:
+				{
+					shared: true,
+					contentFormatter: function(e)
+					{
+						var content="";
+						for(var i=0;i<e.entries.length;i++)
+						{
+							content+=e.entries[i].dataPoint.x.getFullYear()+" ";
+							content+="<strong>"+e.entries[i].dataSeries.name+ ":"+e.entries[i].dataPoint.y+ "</strong>";
+							content+="<br>";
+						}
+						return content;
+					},
+				},
+				legend:
+				{
+					cursor: "pointer",
+					verticalAlign: "top",
+					horizontalAlign: "right",
+					dockInsidePlotArea: true,
+					itemclick: toogleDataSeries
+				},
+				data:
+				[
+					{
+						type: "line",
+						name: "Non Urban :",
+						axisYType: "primary",
+						highlightEnabled: true,
+						markerSize: 0,
+						dataPoints: parseJjaNonUrbanDataPoints()
+					}]
+			});
+			chartSONNonUrban = new CanvasJS.Chart("chartContainer13",
+			{
+				title:
+				{
+					text: "Non Urban:SON:"+chartHeading.toUpperCase()
+				},
+				exportEnabled: true,
+				zoomEnabled: true,
+				backgroundColor: "#FFFFFF",
+				axisX:
+				{
+					title: " Year ",
+					valueFormatString: "YYYY",
+				},
+				axisY:
+				{
+					title: " ",
+					gridThickness: 0.2,
+				},
+				toolTip:
+				{
+					shared: true,
+					contentFormatter: function(e)
+					{
+						var content="";
+						for(var i=0;i<e.entries.length;i++)
+						{
+							content+=e.entries[i].dataPoint.x.getFullYear()+" ";
+							content+="<strong>"+e.entries[i].dataSeries.name+ ":"+e.entries[i].dataPoint.y+ "</strong>";
+							content+="<br>";
+						}
+						return content;
+					},
+				},
+				legend:
+				{
+					cursor: "pointer",
+					verticalAlign: "top",
+					horizontalAlign: "right",
+					dockInsidePlotArea: true,
+					itemclick: toogleDataSeries
+				},
+				data:
+				[
 					{
 						type: "line",
 						name: "Non Urban :",
@@ -2081,11 +2271,44 @@ function processData2(){
 					}
 				]
 			});
-			chartDJF.render();
-			chartMAM.render();
-			chartJJA.render();
-			chartSON.render();
+			chartDJFUrban.render();
+			chartMAMUrban.render();
+			chartJJAUrban.render();
+			chartSONUrban.render();
+			chartDJFNonUrban.render();
+			chartMAMNonUrban.render();
+			chartJJANonUrban.render();
+			chartSONNonUrban.render();
 		});
 }
 
-
+var fileNameCity1="";
+var fielNameCity2="";
+function handleFilesCity1()
+{
+// Check for the various File API support.
+	if (window.FileReader) {
+		// FileReader are supported.
+		//console.log(document.getElementById("csvFileInput").value);
+		fileNameCity1="datafiles/"+files[0].name;
+		flag=1;
+		//alert("File name : " + fileNameMonthly);
+		processDataCity1();
+	} else {
+		alert('FileReader are not supported in this browser.');
+	}	
+}
+function handleFilesCity2()
+{
+// Check for the various File API support.
+	if (window.FileReader) {
+		// FileReader are supported.
+		//console.log(document.getElementById("csvFileInput").value);
+		fileNameCity2="datafiles/"+files[0].name;
+		flag=1;
+		//alert("File name : " + fileNameMonthly);
+		processDataCity2();
+	} else {
+		alert('FileReader are not supported in this browser.');
+	}	
+}

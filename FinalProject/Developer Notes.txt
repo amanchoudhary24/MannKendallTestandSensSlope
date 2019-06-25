@@ -27,3 +27,4 @@
   all the further needed features by yourself.
 * PPS: I tried to keep this tools structure neat and clean but the execution memory complexity is large,good luck for your
   improvements. You can commit the changes on  https://github.com/amanchoudhary24/MannKendallTestandSensSlope 
+* Contact me in case you got stucked in the execution of the web tool: Ph:+91-8118863744 email: amanchoudhary115@gmail.com
