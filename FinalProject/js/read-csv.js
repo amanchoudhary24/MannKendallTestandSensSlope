@@ -22,6 +22,16 @@ month[9] = "October";
 month[10] = "November";
 month[11] = "December";
 
+var fileNameCity1="";
+var fielNameCity2="";
+var dataPointsUrbanCity1=[];
+var dataPointsUrbanCity2=[];
+var dataPointsNonUrbanCity1=[];
+var dataPointsNonUrbanCity2=[];
+
+var monthYearCity1=[];
+var monthYearCity2=[];
+
 var SUrban=0;
 var SNonUrban=0;
 var SAoi=0;
@@ -107,11 +117,16 @@ var tUrban=[];
 var tNonUrban=[];
 var tAoi=[];
 
+
+var storedjfData=[];
+var storemamData=[];
+var storejjaData=[];
+var storesonData=[];
+
 function handleFiles(files){
 	// Check for the various File API support.
 		if (window.FileReader) {
 		// FileReader are supported.
-		//console.log(document.getElementById("csvFileInput").value);
 		fileNameMonthly="datafiles/"+files[0].name;
 		flag=1;
 		//alert("File name : " + fileNameMonthly);
@@ -142,11 +157,7 @@ function getDataPointsFromCSV(csv, index) {
             yAxisLabel=tempPoints[7]+"";
             lineOneLabel=tempPoints[2]+"";
             lineTwoLabel=tempPoints[3]+"";
-            //console.log(yAxisLabel);
 		   	var presentYear="";
-		   	//console.log("TEMP YEAR: "+tempYear);
-		   	//var count=1;
-		   	//var k=0;
 		   	countYears=[];
             for (var i = 1; i < csvLines.length; i++)
                 if (csvLines[i].length > 0) {
@@ -173,9 +184,7 @@ function getDataPointsFromCSV(csv, index) {
                     aoiData.push(parseFloat(points[7]));
                     slopeAoiData.push(parseFloat(points[7])); 
                     tempDataAoi.push(parseFloat(points[7]));         
-           //       k+=1;
                 }
-            //console.log("dataPoints length: "+countYears.length);           
             return dataPoints;
 }
 function parseUrbanDataPoints () {
@@ -192,7 +201,6 @@ function parseUrbanDataPoints () {
 		          	x: new Date(dateForReference[i]), 
 		          	y: slopeUrbanData[i],
 	          	}); 
-	        	//console.log(dateForReference[i]+" - "+slopeUrbanData[i]);	
 	        }   
 	        return tempDataPoints;           
 }
@@ -208,7 +216,6 @@ function parseNonUrbanDataPoints(){
 	         	x: new Date(dateForReference[i]), 
 	         	y: slopeNonUrbanData[i],
 	       	}); 
-	      	//console.log(dateForReference[i]+" - "+slopeUrbanData[i]);	
 	    }   
 	return tempDataPoints;  
 }
@@ -224,7 +231,6 @@ function parseAoiDataPoints(){
 	         	x: new Date(dateForReference[i]), 
 	         	y: slopeAoiData[i],
 	       	}); 
-	      	//console.log(dateForReference[i]+" - "+slopeUrbanData[i]);	
 	    }   
 	return tempDataPoints;  
 }
@@ -248,11 +254,9 @@ function getYearlyDataFromCsv(csv){
                     	yearlyMeanNonUrban.push(parseFloat(points[2]));
                     }            
                 }
-                //console.log("Hello World1");
 }
 function parseYearlyMeanPointsUrban(){
 	var tempDataPoints=[];
-	//console.log(meanYears);
 	for(var i=0;i<yearlyMeanUrban.length;i++)
 	{
 
@@ -278,10 +282,8 @@ function parseYearlyMeanPointsNonUrban(){
 function processData(){
 
 	var chartHeading=fileNameMonthly.substring(10,fileNameMonthly.length-4).toUpperCase()+"  ©iirs|isro";//setting file name to chart
-	//alert(chartHeading+ "");
 	var dps=[];
 	var yearlyFileName="datafiles/YEARLY "+fileNameMonthly.substring(18,fileNameMonthly.length);
-	//console.log(yearlyFileName);
 	$.get(yearlyFileName,function(data)
 		{
 			getYearlyDataFromCsv(data);
@@ -656,23 +658,12 @@ function processData(){
 
 		chart1.render();
 		chart2.render();
-		//var textNode=document.createTextNode("Hello World");
-		//document.getElementById("chartContainer1").appendChild(textNode);
 	});
 } 
-function toogleDataSeries(e){
-		if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-			e.dataSeries.visible = false;
-		} else{
-			e.dataSeries.visible = true;
-		}
-		chart.render();	
-}
 function handleFiles2(files){
 	// Check for the various File API support.
 		if (window.FileReader) {
 		// FileReader are supported.
-		//console.log(document.getElementById("csvFileInput").value);
 		fileNameSeasonal="datafiles/"+files[0].name;
 		//alert("File name : " + fileNameMonthly);
 		processData2();
@@ -833,7 +824,6 @@ function parseSonUrbanDataPoints(){
 	}
 	return tempDataPoints;
 }
-
 function calcS(){
 	tUrban=[];
 	tNonUrban=[];
@@ -865,7 +855,6 @@ function calcS(){
 			}
 		}
 	}
-	//console.log("slopeUrbanData: "+slopeUrbanData.length+ "count: "+(18*12));
 	for(var i=0;i<slopeNonUrbanData.length;i++)
 	{
 		for(var j=i+1;j<slopeNonUrbanData.length;j++)
@@ -894,7 +883,6 @@ function calcS(){
 			}
 		}
 	}
-	//console.log("\nSUrban: "+SUrban+"\nSNonUrban: "+SNonUrban+"\nSAoi: "+SAoi);
 	tempDataUrban.sort();
 	tempDataNonUrban.sort();
 	tempDataAoi.sort();
@@ -954,7 +942,6 @@ function calcS(){
 	}
 	//calculating variance
 	var n=12*countYears.length;
-	//console.log("Years : "+countYears.length);
 	var tiedGroupUrbanSum=0;
 	for(var i=0;i<tUrban.length;i++)
 	{
@@ -975,7 +962,6 @@ function calcS(){
 		tiedGroupAoiSum+=(tAoi[i]*(tAoi[i]-1)*((2*tAoi[i])+5));
 	}
 	varSAoi=((n*(n-1)*((2*n)+5))-tiedGroupAoiSum)/18;
-	//console.log("varSUrban: "+varSUrban+"  varSNonUrban: "+varSNonUrban);
 
 	if(SUrban>0)
 	{
@@ -1010,12 +996,10 @@ function calcS(){
 	}
 	else
 		ZAoi=0;
-	//console.log("ZUrban:"+ZUrban+"  ZNonUrban:"+ZNonUrban);
 
 
 	PUrban=0.3989422804*(Math.exp(-0.5*Math.pow(ZUrban,2)));
 	PNonUrban=0.3989422804*(Math.exp(-0.5*Math.pow(ZNonUrban,2)));
-	//console.log("PUrban : "+ PUrban);
 
 	//Finding sens slope for Urban Data
 	senUrbanData=[];
@@ -1033,7 +1017,6 @@ function calcS(){
 			return a-b;
 		});
 	var temp=senUrbanData.length;
-	//console.log(temp);
 	if(temp%2==0)//even case
 	{
 		slopeSenUrbanData=(senUrbanData[(temp/2)-1]+senUrbanData[temp/2])/2;
@@ -1042,7 +1025,6 @@ function calcS(){
 	{
 		slopeSenUrbanData=senUrbanData[temp/2];
 	}
-	//console.log("Slope"+senUrbanData[temp/2]);
 	senNonUrbanData=[];
 	for(var i=0;i<slopeNonUrbanData.length;i++)
 	{
@@ -1053,7 +1035,6 @@ function calcS(){
 		}
 	}
 	temp=senNonUrbanData.length;
-	//console.log("Temp: "+temp);
 	senNonUrbanData.sort(function(a,b)
 		{
 			return a-b;
@@ -1067,9 +1048,7 @@ function calcS(){
 		slopeSenNonUrbanData=senNonUrbanData[temp/2];
 	}
 }
-
-function calcDataForSeasonalAnalysis()
-{
+function calcDataForSeasonalAnalysis(){
 	SdjfUrban=0;
 	SdjfNonUrban=0;
 	SmamUrban=0;
@@ -1336,7 +1315,6 @@ function calcDataForSeasonalAnalysis()
 	var varSsonUrban=((n*(n-1)*((2*n)+5))-tiedGroupsonUrbanSum)/18;
 	n=sonNonUrbanData.length;
 	var varSsonNonUrban=((n*(n-1)*((2*n)+5))-tiedGroupsonNonUrbanSum)/18;
-	//console.log("VarianceS :\n"+varSdjfUrban+" & "+varSmamNonUrban);
 	//Calculate Z for all the 4 seasons
 	if(SdjfUrban>0)
 	{
@@ -1445,15 +1423,12 @@ function calcDataForSeasonalAnalysis()
 			sendjfUrbanData.push(dk);
 		}
 	}
-	//console.log(sendjfUrbanData);
 	sendjfUrbanData.sort(
 		function(a,b)
 		{
 			return a-b;
 		});
-	//console.log(sendjfUrbanData);
 	temp=sendjfUrbanData.length;
-	//console.log(temp);
 	if(temp%2==0)//even case
 	{
 
@@ -1542,15 +1517,12 @@ function calcDataForSeasonalAnalysis()
 			senmamUrbanData.push(dk);
 		}
 	}
-	//console.log(sendjfUrbanData);
 	senmamUrbanData.sort(
 		function(a,b)
 		{
 			return a-b;
 		});
-	//console.log(sendjfUrbanData);
 	temp=senmamUrbanData.length;
-	//console.log(temp);
 	if(temp%2==0)//even case
 	{
 
@@ -1638,15 +1610,12 @@ function calcDataForSeasonalAnalysis()
 			senjjaUrbanData.push(dk);
 		}
 	}
-	//console.log(sendjfUrbanData);
 	senjjaUrbanData.sort(
 		function(a,b)
 		{
 			return a-b;
 		});
-	//console.log(sendjfUrbanData);
 	temp=senjjaUrbanData.length;
-	//console.log(temp);
 	if(temp%2==0)//even case
 	{
 
@@ -1734,15 +1703,12 @@ function calcDataForSeasonalAnalysis()
 			sensonUrbanData.push(dk);
 		}
 	}
-	//console.log(sendjfUrbanData);
 	sensonUrbanData.sort(
 		function(a,b)
 		{
 			return a-b;
 		});
-	//console.log(sendjfUrbanData);
 	temp=sensonUrbanData.length;
-	//console.log(temp);
 	if(temp%2==0)//even case
 	{
 
@@ -2281,34 +2247,222 @@ function processData2(){
 			chartSONNonUrban.render();
 		});
 }
+function initialiseDataPointsCity1(csv){
+	var dataPoints = [];   
+    var csvLines=[];
+    var points=[];
+    dataPointsUrbanCity1=[];
+    dataPointsNonUrbanCity1=[];
+    monthYearCity1=[];
+    csvLines = csv.split(/[\r?\n|\r|\n]+/);
+    presentYear="";
+	for(var i=1;i<csvLines.length;i++)
+	{
+		if(csvLines[i].length>0)
+		{
+			points=csvLines[i].split(",");
+			if(points[0]!="")
+				presentYear=points[0];
+			var tempDate=points[1].substring(0,3)+", "+presentYear;
+			monthYearCity1.push(tempDate);
+			dataPointsUrbanCity1.push(points[2]);
+			dataPointsNonUrbanCity1.push(points[3]);
+		}
+	}
+}
+function initialiseDataPointsCity2(csv){
+	var dataPoints = [];   
+    var csvLines=[];
+    var points=[];
+    dataPointsUrbanCity2=[];
+    dataPointsNonUrbanCity2=[];
+    monthYearCity2=[];
+    csvLines = csv.split(/[\r?\n|\r|\n]+/);
+    presentYear="";
+	for(var i=1;i<csvLines.length;i++)
+	{
+		if(csvLines[i].length>0)
+		{
+			points=csvLines[i].split(",");
+			if(points[0]!="")
+				presentYear=points[0];
+			var tempDate=points[1].substring(0,3)+", "+presentYear;
+			monthYearCity2.push(tempDate);
+			dataPointsUrbanCity2.push(points[2]);
+			dataPointsNonUrbanCity2.push(points[3]);
+		}
+	}
+}
+function parseDataPointsCity1(){
+	var tempDataPoints=[];
+	for(var i=0;i<dataPointsUrbanCity1.length;i++)
+	{
+		tempDataPoints.push({
+	         	x: new Date(monthYearCity1[i]), 
+	         	y: parseFloat(dataPointsUrbanCity1[i]),
+	       	});
+	}
+	return tempDataPoints;
+}
+function parseDataPointsCity2(){
+	var tempDataPoints=[];	
+	for(var i=0;i<dataPointsUrbanCity2.length;i++)
+	{
+		tempDataPoints.push({
+	         	x: new Date(monthYearCity2[i]), 
+	         	y: parseFloat(dataPointsUrbanCity2[i]),
+	       	}); 
+	}
+	return tempDataPoints;
+}
+function parseNonUrbanDataPointsCity1(){
+	var tempDataPoints=[];
+	for(var i=0;i<dataPointsNonUrbanCity1.length;i++)
+	{
+		tempDataPoints.push({
+	         	x: new Date(monthYearCity1[i]), 
+	         	y: parseFloat(dataPointsNonUrbanCity1[i]),
+	       	});
+	}
+	return tempDataPoints;
+}
+function parseNonUrbanDataPointsCity2(){
+	var tempDataPoints=[];	
+	for(var i=0;i<dataPointsNonUrbanCity2.length;i++)
+	{
+		tempDataPoints.push({
+	         	x: new Date(monthYearCity2[i]), 
+	         	y: parseFloat(dataPointsNonUrbanCity2[i]),
+	       	}); 
+	}
+	return tempDataPoints;
+}
+function displayChart(){
+	var tempCity1Name=(fileNameCity1.substring(10,fileNameCity1.length-4)).split(" ");
+	var tempCity2Name=(fileNameCity2.substring(10,fileNameCity2.length-4)).split(" ");
 
-var fileNameCity1="";
-var fielNameCity2="";
-function handleFilesCity1()
-{
-// Check for the various File API support.
+	var chartComparisonUrban = new CanvasJS.Chart("chartContainer15", {
+	title: {
+		text: "Urban: "+tempCity1Name[2]+" AND "+tempCity2Name[2],
+	},
+	axisX: {
+		valueFormatString: "MMM YYYY"
+	},
+	axisY: {
+		title: "Values",
+	},
+	toolTip: {
+		shared: true
+	},
+	legend: {
+		cursor: "pointer",
+		verticalAlign: "bottom",
+		horizontalAlign: "center",
+		dockInsidePlotArea: false,
+		itemclick: toogleDataSeries
+	},
+	data:[
+	{
+		type: "line",
+		axisYType: "primary",
+		name: ""+tempCity1Name[2],
+		showInLegend: true,
+		markerSize: 0,
+		yValueFormatString: "####.####",
+		dataPoints: parseDataPointsCity1(),
+	},
+	{
+		type: "line",
+		axisYType: "primary",
+		name: ""+tempCity2Name[2],
+		showInLegend: true,
+		markerSize: 0,
+		yValueFormatString: "####.####",
+		dataPoints: parseDataPointsCity2(),
+	}]
+	});
+
+	var chartComparisonNonUrban = new CanvasJS.Chart("chartContainer16", {
+	title: {
+		text: "Non Urban: "+tempCity1Name[2]+" AND "+tempCity2Name[2],
+	},
+	axisX: {
+		valueFormatString: "MMM YYYY"
+	},
+	axisY: {
+		title: "Values",
+	},
+	toolTip: {
+		shared: true
+	},
+	legend: {
+		cursor: "pointer",
+		verticalAlign: "bottom",
+		horizontalAlign: "center",
+		dockInsidePlotArea: false,
+		itemclick: toogleDataSeries
+	},
+	data:[
+	{
+		type: "line",
+		axisYType: "primary",
+		name: ""+tempCity1Name[2],
+		showInLegend: true,
+		markerSize: 0,
+		yValueFormatString: "####.####",
+		dataPoints: parseNonUrbanDataPointsCity1(),
+	},
+	{
+		type: "line",
+		axisYType: "primary",
+		name: ""+tempCity2Name[2],
+		showInLegend: true,
+		markerSize: 0,
+		yValueFormatString: "####.####",
+		dataPoints: parseNonUrbanDataPointsCity2(),
+	}]
+});
+	chartComparisonUrban.render();
+	chartComparisonNonUrban.render();
+}
+function processDataCity1(){
+	$.get(fileNameCity1,function(data)
+	{
+		initialiseDataPointsCity1(data);
+	});
+}
+function processDataCity2(){
+	$.get(fileNameCity2,function(data)
+	{
+		initialiseDataPointsCity2(data);
+		displayChart();
+	});
+}
+function handleFilesCity1(files){
+	// Check for the various File API support.
 	if (window.FileReader) {
 		// FileReader are supported.
-		//console.log(document.getElementById("csvFileInput").value);
 		fileNameCity1="datafiles/"+files[0].name;
-		flag=1;
-		//alert("File name : " + fileNameMonthly);
 		processDataCity1();
 	} else {
 		alert('FileReader are not supported in this browser.');
 	}	
 }
-function handleFilesCity2()
-{
-// Check for the various File API support.
+function handleFilesCity2(files){
+	// Check for the various File API support.
 	if (window.FileReader) {
 		// FileReader are supported.
-		//console.log(document.getElementById("csvFileInput").value);
 		fileNameCity2="datafiles/"+files[0].name;
-		flag=1;
-		//alert("File name : " + fileNameMonthly);
 		processDataCity2();
 	} else {
 		alert('FileReader are not supported in this browser.');
 	}	
+}
+function toogleDataSeries(e){
+		if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+			e.dataSeries.visible = false;
+		} else{
+			e.dataSeries.visible = true;
+		}
+		chart.render();	
 }
