@@ -45,6 +45,15 @@ var senNonUrbanData=[];
 var slopeSenUrbanData=0.0;
 var slopeSenNonUrbanData=0.0;
 
+var slopeSendjfUrbanData=0.0;
+var slopeSendjfNonUrbanData=0.0;
+var slopeSenmamUrbanData=0.0;
+var slopeSenmamNonUrbanData=0.0;
+var slopeSenjjaUrbanData=0.0;
+var slopeSenjjaNonUrbanData=0.0;
+var slopeSensonUrbanData=0.0;
+var slopeSensonNonUrbanData=0.0;
+
 var dateForReference=[];
 var urbanData=[];
 var nonUrbanData=[];
@@ -57,8 +66,25 @@ var tempDataUrban=[];
 var tempDataNonUrban=[];
 var tempDataAoi=[];
 
+var ZdjfUrban=0;
+var ZdjfNonUrban=0;
+var ZmamUrban=0;
+var ZmamNonUrban=0;
+var ZjjaUrban=0;
+var ZjjaNonUrban=0;
+var ZsonUrban=0;
+var ZsonNonUrban=0;
 
-function handleFiles(files) {
+var PdjfUrban=0;
+var PdjfNonUrban=0;
+var PmamUrban=0;
+var PmamNonUrban=0;
+var PjjaUrban=0;
+var PjjaNonUrban=0;
+var PsonUrban=0;
+var PsonNonUrban=0;
+
+function handleFiles(files){
 	// Check for the various File API support.
 		if (window.FileReader) {
 		// FileReader are supported.
@@ -71,7 +97,6 @@ function handleFiles(files) {
 		alert('FileReader are not supported in this browser.');
 	}	
 }
-
 function getDataPointsFromCSV(csv, index) {
 			//Emptying the required arrays
 			dateForReference=[];
@@ -129,8 +154,8 @@ function getDataPointsFromCSV(csv, index) {
                 }
             //console.log("dataPoints length: "+countYears.length);           
             return dataPoints;
-        }
-        function parseUrbanDataPoints () {
+}
+function parseUrbanDataPoints () {
         	for(var i=slopeUrbanData.length-1;i>0;i--)
         	{
         		slopeUrbanData[i]=slopeUrbanData[i]-slopeUrbanData[i-1];
@@ -147,9 +172,8 @@ function getDataPointsFromCSV(csv, index) {
 	        	//console.log(dateForReference[i]+" - "+slopeUrbanData[i]);	
 	        }   
 	        return tempDataPoints;           
-     	}
-function parseNonUrbanDataPoints()
-{
+}
+function parseNonUrbanDataPoints(){
 	for(var i=slopeNonUrbanData.length-1;i>0;i--)
 		slopeNonUrbanData[i]=slopeNonUrbanData[i]-slopeNonUrbanData[i-1];
 	var tempDataPoints=[];
@@ -165,8 +189,7 @@ function parseNonUrbanDataPoints()
 	    }   
 	return tempDataPoints;  
 }
-function parseAoiDataPoints()
-{
+function parseAoiDataPoints(){
 	for(var i=slopeAoiData.length-1;i>0;i--)
 		slopeAoiData[i]=slopeAoiData[i]-slopeAoiData[i-1];
 	var tempDataPoints=[];
@@ -182,8 +205,7 @@ function parseAoiDataPoints()
 	    }   
 	return tempDataPoints;  
 }
-function getYearlyDataFromCsv(csv)
-{
+function getYearlyDataFromCsv(csv){
 	var dataPoints = [];   
     var csvLines=[];
     var points=[];
@@ -203,10 +225,9 @@ function getYearlyDataFromCsv(csv)
                     	yearlyMeanNonUrban.push(parseFloat(points[2]));
                     }            
                 }
-                console.log("Hello World1");
+                //console.log("Hello World1");
 }
-function parseYearlyMeanPointsUrban()
-{
+function parseYearlyMeanPointsUrban(){
 	var tempDataPoints=[];
 	//console.log(meanYears);
 	for(var i=0;i<yearlyMeanUrban.length;i++)
@@ -217,12 +238,9 @@ function parseYearlyMeanPointsUrban()
 	         	y: yearlyMeanUrban[i],
 	       	}); 
 	}
-	                console.log("Hello World2");
-
 	return tempDataPoints;
 }
-function parseYearlyMeanPointsNonUrban()
-{
+function parseYearlyMeanPointsNonUrban(){
 	var tempDataPoints=[];
 	for(var i=0;i<yearlyMeanNonUrban.length;i++)
 	{
@@ -234,14 +252,13 @@ function parseYearlyMeanPointsNonUrban()
 	}
 	return tempDataPoints;
 }
-function processData()
-{
+function processData(){
 
 	var chartHeading=fileNameMonthly.substring(10,fileNameMonthly.length-4).toUpperCase()+"  ©iirs|isro";//setting file name to chart
 	//alert(chartHeading+ "");
 	var dps=[];
 	var yearlyFileName="datafiles/YEARLY "+fileNameMonthly.substring(18,fileNameMonthly.length);
-	console.log(yearlyFileName);
+	//console.log(yearlyFileName);
 	$.get(yearlyFileName,function(data)
 		{
 			getYearlyDataFromCsv(data);
@@ -627,9 +644,8 @@ function toogleDataSeries(e){
 			e.dataSeries.visible = true;
 		}
 		chart.render();	
-	}
-function handleFiles2(files)
-{
+}
+function handleFiles2(files){
 	// Check for the various File API support.
 		if (window.FileReader) {
 		// FileReader are supported.
@@ -651,8 +667,7 @@ var jjaNonUrbanData=[];
 var sonUrbanData=[];
 var sonNonUrbanData=[];
 
-function getDataPointsFromFile(csv,index)
-{
+function getDataPointsFromFile(csv,index){
 	yearForReference=[];
 	mamUrbanData=[];
 	djfUrbanData=[];
@@ -709,8 +724,7 @@ function getDataPointsFromFile(csv,index)
 		}
 	}
 }
-function parseDjfUrbanDataPoints()
-{
+function parseDjfUrbanDataPoints(){
 	var tempDataPoints=[];
 	for(var i=0;i<djfUrbanData.length;i++)
 	{
@@ -722,8 +736,7 @@ function parseDjfUrbanDataPoints()
 	}
 	return tempDataPoints;
 }
-function parseDjfNonUrbanDataPoints()
-{
+function parseDjfNonUrbanDataPoints(){
 	var tempDataPoints=[];
 	for(var i=0;i<djfNonUrbanData.length;i++)
 	{
@@ -735,8 +748,7 @@ function parseDjfNonUrbanDataPoints()
 	}
 	return tempDataPoints;
 }
-function parseMamUrbanDataPoints()
-{
+function parseMamUrbanDataPoints(){
 	var tempDataPoints=[];
 	for(var i=0;i<mamUrbanData.length;i++)
 	{
@@ -748,8 +760,7 @@ function parseMamUrbanDataPoints()
 	}
 	return tempDataPoints;
 }
-function parseMamNonUrbanDataPoints()
-{
+function parseMamNonUrbanDataPoints(){
 	var tempDataPoints=[];
 	for(var i=0;i<mamNonUrbanData.length;i++)
 	{
@@ -761,8 +772,7 @@ function parseMamNonUrbanDataPoints()
 	}
 	return tempDataPoints;
 }
-function parseJjaUrbanDataPoints()
-{
+function parseJjaUrbanDataPoints(){
 	var tempDataPoints=[];
 	for(var i=0;i<jjaUrbanData.length;i++)
 	{
@@ -774,8 +784,7 @@ function parseJjaUrbanDataPoints()
 	}
 	return tempDataPoints;
 }
-function parseJjaNonUrbanDataPoints()
-{
+function parseJjaNonUrbanDataPoints(){
 	var tempDataPoints=[];
 	for(var i=0;i<jjaNonUrbanData.length;i++)
 	{
@@ -787,8 +796,7 @@ function parseJjaNonUrbanDataPoints()
 	}
 	return tempDataPoints;
 }
-function parseSonNonUrbanDataPoints()
-{
+function parseSonNonUrbanDataPoints(){
 	var tempDataPoints=[];
 	for(var i=0;i<sonNonUrbanData.length;i++)
 	{
@@ -800,8 +808,7 @@ function parseSonNonUrbanDataPoints()
 	}
 	return tempDataPoints;
 }
-function parseSonUrbanDataPoints()
-{
+function parseSonUrbanDataPoints(){
 	var tempDataPoints=[];
 	for(var i=0;i<sonUrbanData.length;i++)
 	{
@@ -818,8 +825,7 @@ var tUrban=[];
 var tNonUrban=[];
 var tAoi=[];
 
-function calcS()
-{
+function calcS(){
 	tUrban=[];
 	tNonUrban=[];
 	tAoi=[];
@@ -883,10 +889,10 @@ function calcS()
 	tempDataUrban.sort();
 	tempDataNonUrban.sort();
 	tempDataAoi.sort();
-	for(var i=0;i<tempDataUrban.length-1;i++)
+	for(var i=0;i<tempDataUrban.length;i++)
 	{
 		var res=0;
-		while(tempDataUrban[i]==tempDataUrban[i+1])
+		while(i<(tempDataUrban.length-1)&&tempDataUrban[i]==tempDataUrban[i+1])
 		{
 			res+=1;
 			i++;
@@ -897,7 +903,7 @@ function calcS()
 	for(var i=0;i<tempDataNonUrban.length-1;i++)
 	{
 		var res=0;
-		while(tempDataNonUrban[i]==tempDataNonUrban[i+1])
+		while(i<(tempDataNonUrban.length-1)&&tempDataNonUrban[i]==tempDataNonUrban[i+1])
 		{
 			res+=1;
 			i++;
@@ -908,7 +914,7 @@ function calcS()
 	for(var i=0;i<tempDataAoi.length-1;i++)
 	{
 		var res=1;
-		while(tempDataAoi[i]==tempDataAoi[i+1])
+		while(i<(tempDataAoi.length-1)&&tempDataAoi[i]==tempDataAoi[i+1])
 		{
 			res+=1;
 			i++;
@@ -918,7 +924,7 @@ function calcS()
 	tUrban.sort();
 	tNonUrban.sort();
 	tAoi.sort();
-
+	//removing 1 from the list of tied groups
 	for( var i = 0; i < tAoi.length; i++){ 
    		if ( tAoi[i] === 1) {
      		tAoi.splice(i, 1); 
@@ -937,7 +943,6 @@ function calcS()
      		i--;
    		}
 	}
-	//console.log("Hello World");
 	//calculating variance
 	var n=12*countYears.length;
 	//console.log("Years : "+countYears.length);
@@ -946,7 +951,7 @@ function calcS()
 	{
 		tiedGroupUrbanSum+=(tUrban[i]*(tUrban[i]-1)*((2*tUrban[i])+5));
 	}
-	varSUrban=((n*(n-1)*((2*n)+5))/18)-tiedGroupUrbanSum;
+	varSUrban=((n*(n-1)*((2*n)+5))-tiedGroupUrbanSum)/18;
 
 	var tiedGroupNonUrbanSum=0;
 	for(var i=0;i<tNonUrban.length;i++)
@@ -960,7 +965,7 @@ function calcS()
 	{
 		tiedGroupAoiSum+=(tAoi[i]*(tAoi[i]-1)*((2*tAoi[i])+5));
 	}
-	varSAoi=((n*(n-1)*((2*n)+5))/18)-tiedGroupAoiSum;
+	varSAoi=((n*(n-1)*((2*n)+5))-tiedGroupAoiSum)/18;
 	//console.log("varSUrban: "+varSUrban+"  varSNonUrban: "+varSNonUrban);
 
 	if(SUrban>0)
@@ -1053,13 +1058,776 @@ function calcS()
 		slopeSenNonUrbanData=senNonUrbanData[temp/2];
 	}
 }
-function processData2()
+var SdjfUrban;
+var SdjfNonUrban;
+var SmamUrban;
+var SmamNonUrban;
+var SjjaUrban;
+var SjjaNonUrban;
+var SsonUrban;
+var SsonNonUrban;
+
+function calcDataForSeasonalAnalysis()
 {
+	SdjfUrban=0;
+	SdjfNonUrban=0;
+	SmamUrban=0;
+	SmamNonUrban=0;
+	SjjaUrban=0;
+	SjjaNonUrban=0;
+	SsonUrban=0;
+	SsonNonUrban=0;
+	//calculation of S
+	for(var i=0;i<djfUrbanData.length;i++)
+		for(var j=i+1;j<djfUrbanData.length;j++)
+		{
+			if((djfUrbanData[j]-djfUrbanData[i])>0)
+				SdjfUrban+=1;
+			else if((djfUrbanData[j]-djfUrbanData[i])<0)
+				SdjfUrban-=1;
+		}
+	for(var i=0;i<djfNonUrbanData.length;i++)
+		for(var j=i+1;j<djfNonUrbanData.length;j++)
+		{
+			if((djfNonUrbanData[j]-djfNonUrbanData[i])>0)
+				SdjfNonUrban+=1;
+			else if((djfNonUrbanData[j]-djfNonUrbanData[i])<0)
+				SdjfNonUrban-=1;
+		}
+	for(var i=0;i<mamUrbanData.length;i++)
+		for(var j=i+1;j<mamUrbanData.length;j++)
+		{
+			if((mamUrbanData[j]-mamUrbanData[i])>0)
+				SmamUrban+=1;
+			else if((mamUrbanData[j]-mamUrbanData[i])<0)
+				SmamUrban-=1;
+		}
+	for(var i=0;i<mamNonUrbanData.length;i++)
+		for(var j=i+1;j<mamNonUrbanData.length;j++)
+		{
+			if((mamNonUrbanData[j]-mamNonUrbanData[i])>0)
+				SmamNonUrban+=1;
+			else if((mamNonUrbanData[j]-mamNonUrbanData[i])<0)
+				SmamNonUrban-=1;
+		}
+	for(var i=0;i<jjaUrbanData.length;i++)
+		for(var j=i+1;j<jjaUrbanData.length;j++)
+		{
+			if((jjaUrbanData[j]-jjaUrbanData[i])>0)
+				SjjaUrban+=1;
+			else if((jjaUrbanData[j]-jjaUrbanData[i])<0)
+				SjjaUrban-=1;
+		}
+	for(var i=0;i<jjaNonUrbanData.length;i++)
+		for(var j=i+1;j<jjaNonUrbanData.length;j++)
+		{
+			if((jjaNonUrbanData[j]-jjaNonUrbanData[i])>0)
+				SjjaNonUrban+=1;
+			else if((jjaNonUrbanData[j]-jjaNonUrbanData[i])<0)
+				SjjaNonUrban-=1;
+		}
+	for(var i=0;i<sonUrbanData.length;i++)
+		for(var j=i+1;j<sonUrbanData.length;j++)
+		{
+			if((sonUrbanData[j]-sonUrbanData[i])>0)
+				SsonUrban+=1;
+			else if((sonUrbanData[j]-sonUrbanData[i])<0)
+				SsonUrban-=1;
+		}
+	for(var i=0;i<sonNonUrbanData.length;i++)
+		for(var j=i+1;j<sonNonUrbanData.length;j++)
+		{
+			if((sonNonUrbanData[j]-sonNonUrbanData[i])>0)
+				SsonNonUrban+=1;
+			else if((sonNonUrbanData[j]-sonNonUrbanData[i])<0)
+				SsonNonUrban-=1;
+		}
+//console.log("S: \n"+SdjfUrban+" & "+SdjfNonUrban+"\n"+SmamUrban+" & "+SmamNonUrban+"\n"+SjjaUrban+" & "+SjjaNonUrban+"\n"+SsonUrban+" & "+SsonNonUrban);
+	var tempdjfUrbanData=[];
+	var tempdjfNonUrbanData=[];
+	var tempmamUrbanData=[];
+	var tempmamNonUrbanData=[];
+	var tempjjaUrbanData=[];
+	var tempjjaNonUrbanData=[];
+	var tempsonUrbanData=[];
+	var tempsonNonUrbanData=[];
+	for(var i=0;i<djfUrbanData.length;i++)
+	{
+		tempdjfUrbanData.push(djfUrbanData[i]);
+		tempdjfNonUrbanData.push(djfNonUrbanData[i]);
+	}
+	for(var i=0;i<mamUrbanData.length;i++)
+	{
+		tempmamUrbanData.push(mamUrbanData[i]);
+		tempmamNonUrbanData.push(mamNonUrbanData[i]);
+	}
+	for(var i=0;i<jjaUrbanData.length;i++)
+	{
+		tempjjaUrbanData.push(jjaUrbanData[i]);
+		tempjjaNonUrbanData.push(jjaNonUrbanData[i]);
+	}
+	for(var i=0;i<sonUrbanData.length;i++)
+	{
+		tempsonUrbanData.push(sonUrbanData[i]);
+		tempsonNonUrbanData.push(sonNonUrbanData[i]);
+	}
+	//Sort the data using temp arrays
+	tempdjfUrbanData.sort();
+	tempdjfNonUrbanData.sort();
+	tempmamUrbanData.sort();
+	tempmamNonUrbanData.sort();
+	tempjjaUrbanData.sort();
+	tempjjaNonUrbanData.sort();
+	tempsonUrbanData.sort();
+	tempsonNonUrbanData.sort();
+	//count occurence of the data and store them in t array
+	var tdjfUrbanData=[];
+	var tdjfNonUrbanData=[];
+	var tmamUrbanData=[];
+	var tmamNonUrbanData=[];
+	var tjjaUrbanData=[];
+	var tjjaNonUrbanData=[];
+	var tsonUrbanData=[];
+	var tsonNonUrbanData=[];
+	var res=0;
+	for(var i=0;i<tempdjfUrbanData.length-1;i++)
+	{
+		res=1;
+		while(i<(tempdjfUrbanData.length-1)&&tempdjfUrbanData[i]==tempdjfUrbanData[i+1])
+		{
+			res+=1;
+			i+=1;
+		}
+		tdjfUrbanData.push(res);
+	}
+	for(var i=0;i<tempdjfNonUrbanData.length-1;i++)
+	{
+		res=1;
+		while(i<(tempdjfNonUrbanData.length-1)&&tempdjfNonUrbanData[i]==tempdjfNonUrbanData[i+1])
+		{
+			res+=1;
+			i+=1;
+		}
+		tdjfNonUrbanData.push(res);
+	}
+	for(var i=0;i<tempmamUrbanData.length-1;i++)
+	{
+		res=1;
+		while(i<(tempmamUrbanData.length-1)&&tempmamUrbanData[i]==tempmamUrbanData[i+1])
+		{
+			res+=1;
+			i+=1;
+		}
+		tmamUrbanData.push(res);
+	}
+	for(var i=0;i<tempmamNonUrbanData.length-1;i++)
+	{
+		res=1;
+		while(i<(tempmamNonUrbanData.length-1)&&tempmamNonUrbanData[i]==tempmamNonUrbanData[i+1])
+		{
+			res+=1;
+			i+=1;
+		}
+		tmamNonUrbanData.push(res);
+	}
+	for(var i=0;i<tempjjaUrbanData.length-1;i++)
+	{
+		res=1;
+		while(i<(tempjjaUrbanData.length-1)&&tempjjaUrbanData[i]==tempjjaUrbanData[i+1])
+		{
+			res+=1;
+			i+=1;
+		}
+		tjjaUrbanData.push(res);
+	}
+	for(var i=0;i<tempjjaNonUrbanData.length-1;i++)
+	{
+		res=1;
+		while(i<(tempjjaNonUrbanData.length-1)&&tempjjaNonUrbanData[i]==tempjjaNonUrbanData[i+1])
+		{
+			res+=1;
+			i+=1;
+		}
+		tjjaNonUrbanData.push(res);
+	}
+	for(var i=0;i<tempsonUrbanData.length-1;i++)
+	{
+		res=1;
+		while(i<(tempsonUrbanData.length-1)&&tempsonUrbanData[i]==tempsonUrbanData[i+1])
+		{
+			res+=1;
+			i+=1;
+		}
+		tsonUrbanData.push(res);
+	}
+	for(var i=0;i<tempsonNonUrbanData.length-1;i++)
+	{
+		res=1;
+		while(i<(tempsonNonUrbanData.length-1)&&tempsonNonUrbanData[i]==tempsonNonUrbanData[i+1])
+		{
+			res+=1;
+			i+=1;
+		}
+		tsonNonUrbanData.push(res);
+	}
+	//caluclate variance considering tied groups also
+	var tiedGroupdjfUrbanSum=0;
+	var tiedGroupdjfNonUrbanSum=0;
+	var tiedGroupmamUrbanSum=0;
+	var tiedGroupmamNonUrbanSum=0;
+	var tiedGroupjjaUrbanSum=0;
+	var tiedGroupjjaNonUrbanSum=0;
+	var tiedGroupsonUrbanSum=0;
+	var tiedGroupsonNonUrbanSum=0;
+	for(var i=0;i<tdjfUrbanData.length;i++)
+	{
+		tiedGroupdjfUrbanSum+=(tdjfUrbanData[i]*(tdjfUrbanData[i]-1)*((2*tdjfUrbanData[i])+5));
+	}
+	for(var i=0;i<tdjfNonUrbanData.length;i++)
+	{
+		tiedGroupdjfNonUrbanSum+=(tdjfNonUrbanData[i]*(tdjfNonUrbanData[i]-1)*((2*tdjfNonUrbanData[i])+5));
+	}
+	for(var i=0;i<tmamUrbanData.length;i++)
+	{
+		tiedGroupmamUrbanSum+=(tmamUrbanData[i]*(tmamUrbanData[i]-1)*((2*tmamUrbanData[i])+5));
+	}
+	for(var i=0;i<tmamNonUrbanData.length;i++)
+	{
+		tiedGroupmamNonUrbanSum+=(tmamNonUrbanData[i]*(tmamNonUrbanData[i]-1)*((2*tmamNonUrbanData[i])+5));
+	}
+	for(var i=0;i<tjjaUrbanData.length;i++)
+	{
+		tiedGroupjjaUrbanSum+=(tjjaUrbanData[i]*(tjjaUrbanData[i]-1)*((2*tjjaUrbanData[i])+5));
+	}
+	for(var i=0;i<tjjaNonUrbanData.length;i++)
+	{
+		tiedGroupjjaNonUrbanSum+=(tjjaNonUrbanData[i]*(tjjaNonUrbanData[i]-1)*((2*tjjaNonUrbanData[i])+5));
+	}
+	for(var i=0;i<tsonUrbanData.length;i++)
+	{
+		tiedGroupsonUrbanSum+=(tsonUrbanData[i]*(tsonUrbanData[i]-1)*((2*tsonUrbanData[i])+5));
+	}
+	for(var i=0;i<tsonNonUrbanData.length;i++)
+	{
+		tiedGroupsonNonUrbanSum+=(tsonNonUrbanData[i]*(tsonNonUrbanData[i]-1)*((2*tsonNonUrbanData[i])+5));
+	}
+	var n=0;
+	var varSdjfUrban=0;
+	var varSdjfNonUrban=0;
+	var varSmamUrban=0;
+	var varSmamNonUrban=0;
+	var varSjjaUrban=0;
+	var varSjjaNonUrban=0;
+	var varSsonUrban=0;
+	var varSsonNonUrban=0;
+	n=djfUrbanData.length;
+	var varSdjfUrban=((n*(n-1)*((2*n)+5))-tiedGroupdjfUrbanSum)/18;
+	n=djfNonUrbanData.length;
+	var varSdjfNonUrban=((n*(n-1)*((2*n)+5))-tiedGroupdjfNonUrbanSum)/18;
+	n=mamUrbanData.length;
+	var varSmamUrban=((n*(n-1)*((2*n)+5))-tiedGroupmamUrbanSum)/18;
+	n=mamNonUrbanData.length;
+	var varSmamNonUrban=((n*(n-1)*((2*n)+5))-tiedGroupmamNonUrbanSum)/18;
+	n=jjaUrbanData.length;
+	var varSjjaUrban=((n*(n-1)*((2*n)+5))-tiedGroupjjaUrbanSum)/18;
+	n=jjaNonUrbanData.length;
+	var varSjjaNonUrban=((n*(n-1)*((2*n)+5))-tiedGroupjjaNonUrbanSum)/18;
+	n=sonUrbanData.length;
+	var varSsonUrban=((n*(n-1)*((2*n)+5))-tiedGroupsonUrbanSum)/18;
+	n=sonNonUrbanData.length;
+	var varSsonNonUrban=((n*(n-1)*((2*n)+5))-tiedGroupsonNonUrbanSum)/18;
+	//console.log("VarianceS :\n"+varSdjfUrban+" & "+varSmamNonUrban);
+	//Calculate Z for all the 4 seasons
+	if(SdjfUrban>0)
+	{
+		ZdjfUrban=(SdjfUrban-1)/(Math.sqrt(varSdjfUrban));
+	}
+	else if(SdjfUrban<0)
+	{
+		ZdjfUrban=(SdjfUrban+1)/(Math.sqrt(varSdjfUrban));
+	}
+	else
+		ZdjfUrban=0;
+	if(SdjfNonUrban>0)
+	{
+		ZdjfNonUrban=(SdjfNonUrban-1)/(Math.sqrt(varSdjfNonUrban));
+	}
+	else if(SdjfNonUrban<0)
+	{
+		ZdjfNonUrban=(SdjfNonUrban+1)/(Math.sqrt(varSdjfNonUrban));
+	}
+	else
+		ZdjfNonUrban=0;
+
+	if(SmamUrban>0)
+	{
+		ZmamUrban=(SmamUrban-1)/(Math.sqrt(varSmamUrban));
+	}
+	else if(SmamUrban<0)
+	{
+		ZmamUrban=(SmamUrban+1)/(Math.sqrt(varSmamUrban));
+	}
+	else
+		ZmamUrban=0;
+	if(SmamNonUrban>0)
+	{
+		ZmamNonUrban=(SmamNonUrban-1)/(Math.sqrt(varSmamNonUrban));
+	}
+	else if(SmamNonUrban<0)
+	{
+		ZmamNonUrban=(SmamNonUrban+1)/(Math.sqrt(varSmamNonUrban));
+	}
+	else
+		ZmamNonUrban=0;
+
+	if(SjjaUrban>0)
+	{
+		ZjjaUrban=(SjjaUrban-1)/(Math.sqrt(varSjjaUrban));
+	}
+	else if(SjjaUrban<0)
+	{
+		ZjjaUrban=(SjjaUrban+1)/(Math.sqrt(varSjjaUrban));
+	}
+	else
+		ZjjaUrban=0;
+	if(SjjaNonUrban>0)
+	{
+		ZjjaNonUrban=(SjjaNonUrban-1)/(Math.sqrt(varSjjaNonUrban));
+	}
+	else if(SdjfNonUrban<0)
+	{
+		ZjjaNonUrban=(SjjaNonUrban+1)/(Math.sqrt(varSjjaNonUrban));
+	}
+	else
+		ZjjaNonUrban=0;
+
+	if(SsonUrban>0)
+	{
+		ZsonUrban=(SsonUrban-1)/(Math.sqrt(varSsonUrban));
+	}
+	else if(SsonUrban<0)
+	{
+		ZsonUrban=(SsonUrban+1)/(Math.sqrt(varSsonUrban));
+	}
+	else
+		ZsonUrban=0;
+	if(SsonNonUrban>0)
+	{
+		ZsonNonUrban=(SsonNonUrban-1)/(Math.sqrt(varSsonNonUrban));
+	}
+	else if(SsonNonUrban<0)
+	{
+		ZsonNonUrban=(SsonNonUrban+1)/(Math.sqrt(varSsonNonUrban));
+	}
+	else
+		ZsonNonUrban=0;
+	//Calculating value of P using z obtained above
+	PdjfUrban=0.3989422804*(Math.exp(-0.5*Math.pow(ZdjfUrban,2)));
+	PdjfNonUrban=0.3989422804*(Math.exp(-0.5*Math.pow(ZdjfNonUrban,2)));
+
+	PmamUrban=0.3989422804*(Math.exp(-0.5*Math.pow(ZmamUrban,2)));
+	PmamNonUrban=0.3989422804*(Math.exp(-0.5*Math.pow(ZmamNonUrban,2)));
+
+	PjjaUrban=0.3989422804*(Math.exp(-0.5*Math.pow(ZjjaUrban,2)));
+	PjjaNonUrban=0.3989422804*(Math.exp(-0.5*Math.pow(ZjjaNonUrban,2)));
+
+	PsonUrban=0.3989422804*(Math.exp(-0.5*Math.pow(ZsonUrban,2)));
+	PsonNonUrban=0.3989422804*(Math.exp(-0.5*Math.pow(ZsonNonUrban,2)));
+
+	//Finding sens slope for Urban Data
+	var temp=0;
+	var sendjfUrbanData=[];
+	for(var i=0;i<djfUrbanData.length;i++)
+	{
+		for(var j=i+1;j<djfUrbanData.length;j++)
+		{
+			var dk=(djfUrbanData[j]-djfUrbanData[i])/(j-i);
+			sendjfUrbanData.push(dk);
+		}
+	}
+	//console.log(sendjfUrbanData);
+	sendjfUrbanData.sort(
+		function(a,b)
+		{
+			return a-b;
+		});
+	//console.log(sendjfUrbanData);
+	temp=sendjfUrbanData.length;
+	//console.log(temp);
+	if(temp%2==0)//even case
+	{
+
+		slopeSendjfUrbanData=(sendjfUrbanData[(temp/2)-1]+sendjfUrbanData[temp/2])/2;
+		if(slopeSendjfUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<sendjfUrbanData.length;i++)
+				{
+					if(sendjfUrbanData[i].toString()!="NaN")
+					{
+						slopeSendjfUrbanData=sendjfUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+	else//odd case
+	{
+		slopeSendjfUrbanData=sendjfUrbanData[temp/2];
+		if(slopeSendjfUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<sendjfUrbanData.length;i++)
+				{
+					if(sendjfUrbanData[i].toString()!="NaN")
+					{
+						slopeSendjfUrbanData=sendjfUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+
+	var sendjfNonUrbanData=[];
+	for(var i=0;i<djfNonUrbanData.length;i++)
+	{
+		for(var j=i+1;j<djfNonUrbanData.length;j++)
+		{
+			var dk=(djfNonUrbanData[j]-djfNonUrbanData[i])/(j-i);
+			sendjfNonUrbanData.push(dk);
+		}
+	}
+	sendjfNonUrbanData.sort(
+		function(a,b)
+		{
+			return a-b;
+		});
+	temp=sendjfNonUrbanData.length;
+	if(temp%2==0)//even case
+	{
+		slopeSendjfNonUrbanData=(sendjfNonUrbanData[(temp/2)-1]+sendjfNonUrbanData[temp/2])/2;
+		if(slopeSendjfNonUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<sendjfNonUrbanData.length;i++)
+				{
+					if(sendjfNonUrbanData[i].toString()!="NaN")
+					{
+						slopeSendjfNonUrbanData=sendjfNonUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+	else//odd case
+	{
+		slopeSendjfNonUrbanData=sendjfNonUrbanData[temp/2];
+		if(slopeSendjfNonUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<sendjfNonUrbanData.length;i++)
+				{
+					if(sendjfNonUrbanData[i].toString()!="NaN")
+					{
+						slopeSendjfNonUrbanData=sendjfNonUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+
+	//for MAM
+	var senmamUrbanData=[];
+	for(var i=0;i<mamUrbanData.length;i++)
+	{
+		for(var j=i+1;j<mamUrbanData.length;j++)
+		{
+			var dk=(mamUrbanData[j]-mamUrbanData[i])/(j-i);
+			senmamUrbanData.push(dk);
+		}
+	}
+	//console.log(sendjfUrbanData);
+	senmamUrbanData.sort(
+		function(a,b)
+		{
+			return a-b;
+		});
+	//console.log(sendjfUrbanData);
+	temp=senmamUrbanData.length;
+	//console.log(temp);
+	if(temp%2==0)//even case
+	{
+
+		slopeSenmamUrbanData=(senmamUrbanData[(temp/2)-1]+senmamUrbanData[temp/2])/2;
+		if(slopeSenmamUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<senmamUrbanData.length;i++)
+				{
+					if(senmamUrbanData[i].toString()!="NaN")
+					{
+						slopeSenmamUrbanData=senmamUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+	else//odd case
+	{
+		slopeSenmamUrbanData=senmamUrbanData[temp/2];
+		if(slopeSenmamUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<senmamUrbanData.length;i++)
+				{
+					if(senmamUrbanData[i].toString()!="NaN")
+					{
+						slopeSenmamUrbanData=senmamUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+
+	var senmamNonUrbanData=[];
+	for(var i=0;i<mamNonUrbanData.length;i++)
+	{
+		for(var j=i+1;j<mamNonUrbanData.length;j++)
+		{
+			var dk=(mamNonUrbanData[j]-mamNonUrbanData[i])/(j-i);
+			senmamNonUrbanData.push(dk);
+		}
+	}
+	senmamNonUrbanData.sort(
+		function(a,b)
+		{
+			return a-b;
+		});
+	temp=senmamNonUrbanData.length;
+	if(temp%2==0)//even case
+	{
+		slopeSenmamNonUrbanData=(senmamNonUrbanData[(temp/2)-1]+senmamNonUrbanData[temp/2])/2;
+		if(slopeSenmamNonUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<senmamNonUrbanData.length;i++)
+				{
+					if(senmamNonUrbanData[i].toString()!="NaN")
+					{
+						slopeSenmamNonUrbanData=senmamNonUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+	else//odd case
+	{
+		slopeSenmamNonUrbanData=senmamNonUrbanData[temp/2];
+		if(slopeSenmamNonUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<senmamNonUrbanData.length;i++)
+				{
+					if(senmamNonUrbanData[i].toString()!="NaN")
+					{
+						slopeSenmamNonUrbanData=senmamNonUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+	//for JJA
+	var senjjaUrbanData=[];
+	for(var i=0;i<jjaUrbanData.length;i++)
+	{
+		for(var j=i+1;j<jjaUrbanData.length;j++)
+		{
+			var dk=(jjaUrbanData[j]-jjaUrbanData[i])/(j-i);
+			senjjaUrbanData.push(dk);
+		}
+	}
+	//console.log(sendjfUrbanData);
+	senjjaUrbanData.sort(
+		function(a,b)
+		{
+			return a-b;
+		});
+	//console.log(sendjfUrbanData);
+	temp=senjjaUrbanData.length;
+	//console.log(temp);
+	if(temp%2==0)//even case
+	{
+
+		slopeSenjjaUrbanData=(senjjaUrbanData[(temp/2)-1]+senjjaUrbanData[temp/2])/2;
+		if(slopeSenjjaUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<senjjaUrbanData.length;i++)
+				{
+					if(senjjaUrbanData[i].toString()!="NaN")
+					{
+						slopeSenjjaUrbanData=senjjaUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+	else//odd case
+	{
+		slopeSenjjaUrbanData=senjjaUrbanData[temp/2];
+		if(slopeSenjjaUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<senjjaUrbanData.length;i++)
+				{
+					if(senjjaUrbanData[i].toString()!="NaN")
+					{
+						slopeSenjjaUrbanData=senjjaUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+
+	var senjjaNonUrbanData=[];
+	for(var i=0;i<jjaNonUrbanData.length;i++)
+	{
+		for(var j=i+1;j<jjaNonUrbanData.length;j++)
+		{
+			var dk=(jjaNonUrbanData[j]-jjaNonUrbanData[i])/(j-i);
+			senjjaNonUrbanData.push(dk);
+		}
+	}
+	senjjaNonUrbanData.sort(
+		function(a,b)
+		{
+			return a-b;
+		});
+	temp=senjjaNonUrbanData.length;
+	if(temp%2==0)//even case
+	{
+		slopeSenjjaNonUrbanData=(senjjaNonUrbanData[(temp/2)-1]+senjjaNonUrbanData[temp/2])/2;
+		if(slopeSenjjaNonUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<senjjaNonUrbanData.length;i++)
+				{
+					if(senjjaNonUrbanData[i].toString()!="NaN")
+					{
+						slopeSenjjaNonUrbanData=senjjaNonUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+	else//odd case
+	{
+		slopeSenjjaNonUrbanData=senjjaNonUrbanData[temp/2];
+		if(slopeSenjjaNonUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<senjjaNonUrbanData.length;i++)
+				{
+					if(senjjaNonUrbanData[i].toString()!="NaN")
+					{
+						slopeSenjjaNonUrbanData=senjjaNonUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+	//For SON
+	var sensonUrbanData=[];
+	for(var i=0;i<sonUrbanData.length;i++)
+	{
+		for(var j=i+1;j<sonUrbanData.length;j++)
+		{
+			var dk=(sonUrbanData[j]-sonUrbanData[i])/(j-i);
+			sensonUrbanData.push(dk);
+		}
+	}
+	//console.log(sendjfUrbanData);
+	sensonUrbanData.sort(
+		function(a,b)
+		{
+			return a-b;
+		});
+	//console.log(sendjfUrbanData);
+	temp=sensonUrbanData.length;
+	//console.log(temp);
+	if(temp%2==0)//even case
+	{
+
+		slopeSensonUrbanData=(sensonUrbanData[(temp/2)-1]+sensonUrbanData[temp/2])/2;
+		if(slopeSensonUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<sensonUrbanData.length;i++)
+				{
+					if(sensonUrbanData[i].toString()!="NaN")
+					{
+						slopeSensonUrbanData=sensonUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+	else//odd case
+	{
+		slopeSensonUrbanData=sensonUrbanData[temp/2];
+		if(slopeSensonUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<sensonUrbanData.length;i++)
+				{
+					if(sensonUrbanData[i].toString()!="NaN")
+					{
+						slopeSensonUrbanData=sensonUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+
+	var sensonNonUrbanData=[];
+	for(var i=0;i<sonNonUrbanData.length;i++)
+	{
+		for(var j=i+1;j<sonNonUrbanData.length;j++)
+		{
+			var dk=(sonNonUrbanData[j]-sonNonUrbanData[i])/(j-i);
+			sensonNonUrbanData.push(dk);
+		}
+	}
+	sensonNonUrbanData.sort(
+		function(a,b)
+		{
+			return a-b;
+		});
+	temp=sensonNonUrbanData.length;
+	if(temp%2==0)//even case
+	{
+		slopeSensonNonUrbanData=(sensonNonUrbanData[(temp/2)-1]+sensonNonUrbanData[temp/2])/2;
+		if(slopeSensonNonUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<sensonNonUrbanData.length;i++)
+				{
+					if(sensonNonUrbanData[i].toString()!="NaN")
+					{
+						slopeSensonNonUrbanData=sensonNonUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+	else//odd case
+	{
+		slopeSensonNonUrbanData=sensonNonUrbanData[temp/2];
+		if(slopeSensonNonUrbanData.toString()=="NaN")
+			{
+				for(var i=temp/2;i<sensonNonUrbanData.length;i++)
+				{
+					if(sensonNonUrbanData[i].toString()!="NaN")
+					{
+						slopeSensonNonUrbanData=sensonNonUrbanData[i];
+						break;
+					}
+				}
+			}
+	}
+}
+function processData2(){
 		var chartHeading=fileNameSeasonal.substring(10,fileNameSeasonal.length-4);//setting file name to chart
 		$.get(fileNameSeasonal,function(data)
 		{
 			getDataPointsFromFile(data,0);//data initialisation in the arrays
 			calcS();
+			calcDataForSeasonalAnalysis();
 			chartDJF=new CanvasJS.Chart("chartContainer2",
 			{
 				title:
@@ -1069,9 +1837,6 @@ function processData2()
 				subtitles:[
 				{
 					text: "This is a Subtitle",
-					//Uncomment properties below to see how they behave
-					//fontColor: "red",
-					//fontSize: 30
 				}
 				],
 				exportEnabled: true,
@@ -1081,7 +1846,6 @@ function processData2()
 				{
 					title: " Year ",
 					valueFormatString: "YYYY",
-
 				},
 				axisY:
 				{
@@ -1129,8 +1893,7 @@ function processData2()
 						highlightEnabled: true,
 						markerSize: 0,
 						dataPoints: parseDjfNonUrbanDataPoints()
-					}
-				]
+					}]
 			});
 			chartMAM = new CanvasJS.Chart("chartContainer3",
 			{
@@ -1254,9 +2017,7 @@ function processData2()
 						highlightEnabled: true,
 						markerSize: 0,
 						dataPoints: parseJjaNonUrbanDataPoints()
-					}
-				]
-
+					}]
 			});
 			chartSON = new CanvasJS.Chart("chartContainer5",
 			{
