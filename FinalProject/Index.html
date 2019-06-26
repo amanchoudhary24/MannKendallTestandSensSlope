@@ -9,28 +9,43 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Trend Analysis</title>
+<!--=======================================================-->
+    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" type="text/css" href="css/util.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
   </head>
   <body style="background-color:#D3D3D3 ">
-    <div id="home"></div>
+    <div id="monthlyTrend"></div>
     <br>
     <br>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-      <div class="container">
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#home">Monthly Trend</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#seasonalTrend">Seasonal Trend</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#comparisonTrend">Comparison of Cities</a>
-            </li>
-          </ul>
-        </div>
+    <div class="container">
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#monthlyTrend">Monthly Trend Chart</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#seasonalTrend">Seasonal Trend Chart</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#monthlyComparison">Monthly Comparison Tables</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#DJFComparison">Seasonal Comparison Tables</a>
+          </li>
+          <!--
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#MonthlyComparisonTableUrban">Tables</a>
+          </li>
+        -->
+        </ul>
       </div>
-    </nav>
+    </div>
+  </nav>
     <br>
     <div id="heading1" style="box-shadow: 5px 0px 15px 5px #000000;background-color:#ffffff">
       <fieldset style="text-align:center;">
@@ -39,10 +54,11 @@
             <div id="title1" style="font-family:sans-serif; color:#007; text-align: left; width:95%; "><b> &nbsp MONTHLY TREND ANALYSIS CHART</b></div>
           </h2>
         </legend>
-        <label for="csvFileInput" style="text-align:center;font-size:22px;">
+        <label for="csvFileInput" style="text-align:left ;font-size:22px;">
         <strong>Monthly CSV File:</strong>
         </label>
         <input type="file" id="csvFileInput" onchange="handleFiles(this.files)" accept=".csv" style="float: auto;font-size:22px;">
+        <button onclick="addDataToTable()" class="button" style="vertical-align:middle; float: right;"> <span>Push</span> </button>
       </fieldset>
     </div>
     <br>
@@ -68,6 +84,7 @@
         <strong>Seasonal CSV File:</strong>
         </label>
         <input type="file" id="csvFileInput" onchange="handleFiles2(this.files)" accept=".csv" style="float: auto;font-size:22px;">
+        <button onclick="addDataToSeasonalTable()" class="button" style="vertical-align:middle; float: right;"> <span>Push</span> </button>
       </fieldset>
     </div>
     <br>
@@ -86,6 +103,7 @@
     <div id="chartContainer12" style="width: 50%; height: 300px;display: inline-block;background-color:#ffffff;margin-left: auto;margin-right: auto;background-image:url('images/logo.png');background-repeat: no-repeat;background-position: center center; box-shadow: -5px 5px 15px 5px #000000;"></div>
     <div id="chartContainer13" style="width: 49.5%; height: 300px;display: inline-block;background-color:#ffffff;margin-left: auto;margin-right: auto;background-image:url('images/logo.png');background-repeat: no-repeat;background-position: center center; box-shadow: 5px 5px 15px 5px #000000;"></div>
     <br>
+    <!--
     <div id="comparisonTrend">
     </div>
     <br>
@@ -99,7 +117,7 @@
           </h2>
         </legend>
         <label for="csvFileInput" style="text-align:center;font-size:22px;">
-        <strong>Monthly CSV File City1:</strong>
+        <strong> Monthly CSV File City1:</strong>
         </label>
         <input type="file" id="csvFileInput" onchange="handleFilesCity1(this.files)" accept=".csv" style="float: auto;font-size:22px;">
         <label for="csvFileInput" style="text-align:center;font-size:22px;">
@@ -110,21 +128,254 @@
     </div>
     <br>
     <div id="output" style="background-color:#ffffff;"></div>
-    <div id="chartContainer15" style="height: 500px; max-width: 98%; display: block;background-color:#ffffff;margin-left: auto;margin-right: auto;background-image:url('images/logo.png');background-repeat: no-repeat;background-position: center center; box-shadow: 5px 5px 15px 5px #000000;"></div>
+    <div id="chartContainer15" style="max-height: 500px;height: 500px; max-width: 98%;display: block;background-color:#ffffff;margin-left: auto;margin-right: auto;background-image:url('images/logo.png');background-repeat: no-repeat;background-position: center center; box-shadow: 5px 5px 15px 5px #000000;"></div>
     <br>
-    <div id="chartContainer16" style="height: 500px; max-width: 98%; display: block;background-color:#ffffff;margin-left: auto;margin-right: auto;background-image:url('images/logo.png');background-repeat: no-repeat;background-position: center center; box-shadow: 5px 5px 15px 5px #000000;"></div>
+    <div id="chartContainer16" style="max-height: 500px;height: 500px;max-width: 98%; display: block;background-color:#ffffff;margin-left: auto;margin-right: auto;background-image:url('images/logo.png');background-repeat: no-repeat;background-position: center center; box-shadow: 5px 5px 15px 5px #000000;"></div>
     <br>
-    <!-- Le javascript ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <footer style="font-family:sans-serif; color:#000000;">
+-->
+
+  <br>
+  <br>
+  <div class="limiter">
+    <div class="container-table100">
+      <div class="wrap-table100">
+        <div class="table100 ver1 m-b-110">
+          <div class="table100-head">
+            <table id="monthlyComparison">
+              <thead>
+                <tr> <td><strong>&nbsp URBAN MONTHLY DATA COMPARISON</strong></td></tr>
+                <tr>
+                  <th class="cell100 column1">File Name</th>
+                  <th class="cell100 column2">P</th>
+                  <th class="cell100 column3">Z</th>
+                  <th class="cell100 column4">Sens Slope</th>
+                  <th class="cell100 column5">Significance</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="table100-body js-pscroll">
+            <table id="MonthlyComparisonTableUrban1">
+              <tbody>
+                <tr>
+                  <td class="cell100 column1"></td>
+                  <td class="cell100 column2"></td>
+                  <td class="cell100 column3"></td>
+                  <td class="cell100 column4"></td>
+                  <td class="cell100 column5"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="limiter">
+    <div class="container-table100">
+      <div class="wrap-table100">
+        <div class="table100 ver1 m-b-110">
+          <div class="table100-head">
+            <table id="MonthlyComparisonTableNonUrban">
+              <thead>
+                <tr> <td><strong>&nbsp NON URBAN MONTHLY DATA COMPARISON</strong></td></tr>
+                <tr>
+                  <th class="cell100 column1">File Name</th>
+                  <th class="cell100 column2">P</th>
+                  <th class="cell100 column3">Z</th>
+                  <th class="cell100 column4">Sens Slope</th>
+                  <th class="cell100 column5">Significance</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="table100-body js-pscroll">
+            <table id="MonthlyComparisonTableNonUrban1">
+              <tbody>
+                <tr>
+                  <td class="cell100 column1"></td>
+                  <td class="cell100 column2"></td>
+                  <td class="cell100 column3"></td>
+                  <td class="cell100 column4"></td>
+                  <td class="cell100 column5"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="limiter">
+    <div class="container-table100">
+      <div class="wrap-table100">
+        <div class="table100 ver1 m-b-110">
+          <div class="table100-head">
+            <table id="DJFComparison">
+              <thead>
+                <tr> <td><strong>&nbsp DJF MONTHLY DATA COMPARISON</strong></td></tr>
+                <tr>
+                  <th class="cell100 column1">File Name</th>
+                  <th class="cell100 column2">P</th>
+                  <th class="cell100 column3">Z</th>
+                  <th class="cell100 column4">Sens Slope</th>
+                  <th class="cell100 column5">Significance</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="table100-body js-pscroll">
+            <table id="DJFComparison1">
+              <tbody>
+                <tr>
+                  <td class="cell100 column1"></td>
+                  <td class="cell100 column2"></td>
+                  <td class="cell100 column3"></td>
+                  <td class="cell100 column4"></td>
+                  <td class="cell100 column5"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="limiter">
+    <div class="container-table100">
+      <div class="wrap-table100">
+        <div class="table100 ver1 m-b-110">
+          <div class="table100-head">
+            <table id="MAMComparison">
+              <thead>
+                <tr> <td><strong>&nbsp MAM MONTHLY DATA COMPARISON</strong></td></tr>
+                <tr>
+                  <th class="cell100 column1">File Name</th>
+                  <th class="cell100 column2">P</th>
+                  <th class="cell100 column3">Z</th>
+                  <th class="cell100 column4">Sens Slope</th>
+                  <th class="cell100 column5">Significance</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="table100-body js-pscroll">
+            <table id="MAMComparison1">
+              <tbody>
+                <tr>
+                  <td class="cell100 column1"></td>
+                  <td class="cell100 column2"></td>
+                  <td class="cell100 column3"></td>
+                  <td class="cell100 column4"></td>
+                  <td class="cell100 column5"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="limiter">
+    <div class="container-table100">
+      <div class="wrap-table100">
+        <div class="table100 ver1 m-b-110">
+          <div class="table100-head">
+            <table id="JJAComparison">
+              <thead>
+                <tr> <td><strong>&nbsp JJA MONTHLY DATA COMPARISON</strong></td></tr>
+                <tr>
+                  <th class="cell100 column1">File Name</th>
+                  <th class="cell100 column2">P</th>
+                  <th class="cell100 column3">Z</th>
+                  <th class="cell100 column4">Sens Slope</th>
+                  <th class="cell100 column5">Significance</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="table100-body js-pscroll">
+            <table id="JJAComparison1">
+              <tbody>
+                <tr>
+                  <td class="cell100 column1"></td>
+                  <td class="cell100 column2"></td>
+                  <td class="cell100 column3"></td>
+                  <td class="cell100 column4"></td>
+                  <td class="cell100 column5"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="limiter">
+    <div class="container-table100">
+      <div class="wrap-table100">
+        <div class="table100 ver1 m-b-110">
+          <div class="table100-head">
+            <table id="SONComparison">
+              <thead>
+                <tr> <td><strong>&nbsp SON MONTHLY DATA COMPARISON</strong></td></tr>
+                <tr>
+                  <th class="cell100 column1">File Name</th>
+                  <th class="cell100 column2">P</th>
+                  <th class="cell100 column3">Z</th>
+                  <th class="cell100 column4">Sens Slope</th>
+                  <th class="cell100 column5">Significance</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="table100-body js-pscroll">
+            <table id="SONComparison1">
+              <tbody>
+                <tr>
+                  <td class="cell100 column1"></td>
+                  <td class="cell100 column2"></td>
+                  <td class="cell100 column3"></td>
+                  <td class="cell100 column4"></td>
+                  <td class="cell100 column5"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!--=============================================================================-->
+    <footer style="font-family:sans-serif; color:#000000; ">
       <br>
       <br>
       <center>
         <strong>
-          <p>&copy; IIRS|ISRO</p>
+          <p>Copyright &copy; 2019 Indian Institute of Remote Sensing | Indian Space Research Organisation , All rights reserved</p>
         </strong>
       </center>
     </footer>
+    <!-- Le javascript ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
     <script type="text/javascript" src="js/read-csv.js"></script>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/popper.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="vendor/select2/select2.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom JavaScript for this theme -->
+    <script src="js/scrolling-nav.js"></script>
   </body>
 </html>
