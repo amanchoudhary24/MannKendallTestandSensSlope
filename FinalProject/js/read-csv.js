@@ -22,6 +22,17 @@ month[9] = "October";
 month[10] = "November";
 month[11] = "December";
 
+var significancedjfUrbanMonthly="";
+var significancedjfNonUrbanMonthly="";
+var significancemamUrbanMonthly="";
+var significancemamNonUrbanMonthly="";
+var significancejjaUrbanMonthly="";
+var significancejjaNonUrbanMonthly="";
+var significancesonUrbanMonthly="";
+var significancesonNonUrbanMonthly="";
+
+var significanceUrbanMonthly="";
+var significanceNonUrbanMonthly="";
 var fileNameCity1="";
 var fielNameCity2="";
 var dataPointsUrbanCity1=[];
@@ -42,6 +53,10 @@ var varSAoi=0;
 var yearlyMeanUrban=[];
 var yearlyMeanNonUrban=[];
 var meanYears=[];
+var yearlyMinUrban=[];
+var yearlyMaxUrban=[];
+var yearlyMinNonUrban=[];
+var yearlyMaxNonUrban=[];
 
 var PUrban=0;
 var PNonUrban=0;
@@ -117,6 +132,10 @@ var tUrban=[];
 var tNonUrban=[];
 var tAoi=[];
 
+var minUrbanDataPoints=[];
+var maxUrbanDataPoints=[];
+var minNonUrbanDataPoints=[];
+var maxNonUrbanDataPoints=[];
 
 var storedjfData=[];
 var storemamData=[];
@@ -132,7 +151,7 @@ function handleFiles(files){
 		//alert("File name : " + fileNameMonthly);
 		processData();
 	} else {
-		alert('FileReader are not supported in this browser.');
+		alert('FileReaders are not supported in this browser.');
 	}	
 }
 function getDataPointsFromCSV(csv, index) {
@@ -147,6 +166,17 @@ function getDataPointsFromCSV(csv, index) {
 			tempDataUrban=[];
 			tempDataNonUrban=[];
 			tempDataAoi=[];
+			minUrbanDataPoints=[];
+			minNonUrbanDataPoints=[];
+			maxUrbanDataPoints=[];
+			maxNonUrbanDataPoints=[];
+
+			yearlyMeanUrban=[];
+    		yearlyMeanNonUrban=[];
+    		yearlyMinUrban=[];
+			yearlyMaxUrban=[];
+			yearlyMinNonUrban=[];
+			yearlyMaxNonUrban=[];
 
             var dataPoints = [];
             var csvLines=[];
@@ -176,14 +206,26 @@ function getDataPointsFromCSV(csv, index) {
                     urbanData.push(parseFloat(points[2]));
                     slopeUrbanData.push(parseFloat(points[2]));
                     tempDataUrban.push(parseFloat(points[2]));
-
-                    nonUrbanData.push(parseFloat(points[3]));
-                    slopeNonUrbanData.push(parseFloat(points[3]));
-                    tempDataNonUrban.push(parseFloat(points[3]));
-
-                    aoiData.push(parseFloat(points[7]));
-                    slopeAoiData.push(parseFloat(points[7])); 
-                    tempDataAoi.push(parseFloat(points[7]));         
+                    minUrbanDataPoints.push(parseFloat(points[3]));
+                    maxUrbanDataPoints.push(parseFloat(points[4]));
+                    if(points[5]!="")
+                    {
+                    	yearlyMeanUrban.push(parseFloat(points[5]));
+	                    yearlyMinUrban.push(parseFloat(points[6]));
+	                    yearlyMaxUrban.push(parseFloat(points[7]));
+                    }
+                    nonUrbanData.push(parseFloat(points[12]));
+                    slopeNonUrbanData.push(parseFloat(points[12]));
+                    tempDataNonUrban.push(parseFloat(points[12]));
+					minNonUrbanDataPoints.push(parseFloat(points[13]));
+					maxNonUrbanDataPoints.push(parseFloat(points[14]));
+					if(points[15]!="")
+					{
+						yearlyMeanNonUrban.push(parseFloat(points[15]));
+	                    yearlyMinNonUrban.push(parseFloat(points[16]));
+	                    yearlyMaxNonUrban.push(parseFloat(points[17]));   
+					}
+					
                 }
             return dataPoints;
 }
@@ -234,34 +276,13 @@ function parseAoiDataPoints(){
 	    }   
 	return tempDataPoints;  
 }
-function getYearlyDataFromCsv(csv){
-	var dataPoints = [];   
-    var csvLines=[];
-    var points=[];
-    meanYears=[];
-    yearlyMeanUrban=[];
-    yearlyMeanNonUrban=[];
-    csvLines = csv.split(/[\r?\n|\r|\n]+/);  
-    var tempPoints=[];
-    tempPoints=csvLines[0].split(","); 
-    for (var i = 1; i < csvLines.length; i++)
-                if (csvLines[i].length > 0) {
-                    points = csvLines[i].split(",");
-                    if(points[0]!="")
-                    {
-                    	meanYears.push(parseInt(points[0]));
-                    	yearlyMeanUrban.push(parseFloat(points[1]));
-                    	yearlyMeanNonUrban.push(parseFloat(points[2]));
-                    }            
-                }
-}
 function parseYearlyMeanPointsUrban(){
 	var tempDataPoints=[];
-	for(var i=0;i<yearlyMeanUrban.length;i++)
+	for(var i=0;i<countYears.length;i++)
 	{
 
 		tempDataPoints.push({
-	         	x: new Date("JAN, "+meanYears[i]), 
+	         	x: new Date("JAN, "+countYears[i]), 
 	         	y: yearlyMeanUrban[i],
 	       	}); 
 	}
@@ -269,25 +290,52 @@ function parseYearlyMeanPointsUrban(){
 }
 function parseYearlyMeanPointsNonUrban(){
 	var tempDataPoints=[];
-	for(var i=0;i<yearlyMeanNonUrban.length;i++)
+	for(var i=0;i<countYears.length;i++)
 	{
-
 		tempDataPoints.push({
-	         	x: new Date("JAN, "+meanYears[i]), 
-	         	y: yearlyMeanNonUrban[i],
+	         	x: new Date("JAN, "+countYears[i]), 
+	         	y: parseFloat(yearlyMeanNonUrban[i]),
 	       	}); 
 	}
 	return tempDataPoints;
 }
+function retrieveDataPoints(arr){
+	var dataPoints=[];
+	var k=0;
+	for(var i=0;i<arr.length;i++)
+	{	
+		for(var j=0;j<12;j++)
+		{
+			dataPoints.push(
+			{
+				x: new Date(month[j]+", "+countYears[k]),
+				y: parseFloat(arr[i]),
+			});
+			i+=1;
+		}
+		k+=1;
+		i-=1;
+	}
+	return dataPoints;
+}
+function retrieveYearlyDataPoints(arr)
+{
+	var tempDataPoints=[];
+	for(var i=0;i<arr.length;i++)
+	{
+		tempDataPoints.push(
+		{
+			x: new Date("JAN, "+countYears[i]),
+			y: parseFloat(arr[i]),
+		});
+	}
+	return tempDataPoints;
+}
+
 function processData(){
 
 	var chartHeading=fileNameMonthly.substring(10,fileNameMonthly.length-4).toUpperCase()+"  ©iirs|isro";//setting file name to chart
 	var dps=[];
-	var yearlyFileName="datafiles/YEARLY "+fileNameMonthly.substring(18,fileNameMonthly.length);
-	$.get(yearlyFileName,function(data)
-		{
-			getYearlyDataFromCsv(data);
-		});
 	$.get(fileNameMonthly, function(data){
 	getDataPointsFromCSV(data,10);//dummy run to initialize all the values
 	calcS();
@@ -301,7 +349,6 @@ function processData(){
 		chartSubHeading7="z="+parseFloat(ZUrban).toPrecision(4);
 		chartSubHeading8="Sens Slope="+parseFloat(slopeSenUrbanData).toPrecision(4);
 		chartSubHeading1=" p="+parseFloat(PUrban).toPrecision(4);
-		chartSubHeading2="Trend Increasing";
 		if(PUrban<0.001||PUrban<0.01||PUrban<0.05||PUrban<0.1)
 		{
 			if(PUrban<0.001)
@@ -350,7 +397,7 @@ function processData(){
 		else
 			chartSubHeading3=" NON SIGNIFICANT";
 	}
-	
+	significanceUrbanMonthly=chartSubHeading3;
 	chart1 = new CanvasJS.Chart("chartContainer1", {
 		title: {
 			text: "Urban :"+chartHeading,
@@ -399,7 +446,7 @@ function processData(){
 			labelAngle: -70,
   			intervalType: "month",
 		},{
-          title: "Years",
+          title: " ",
           lineColor: "#ffffff",
           tickLength: 1,
           valueFormatString: "YYYY",
@@ -413,35 +460,42 @@ function processData(){
 			valueFormatString:"#######",
 		},
 		toolTip: {
-			shared: true,
-			/*
-			contentFormatter: function (e) {
-				var content = " ";
-				for (var i = 0; i < e.entries.length; i++) {
-					content += month[e.entries[i].dataPoint.x.getMonth()] +" "+ e.entries[i].dataPoint.x.getFullYear() + " " ;
-					content+="<strong> "+e.entries[i].dataSeries.name+": " + e.entries[i].dataPoint.y + "</strong>";
-
-					content += "<br/>";
-				}
-				return content;
-				
-			},
-			*/	
+			shared: true,	
 		},
 		legend: {
 			cursor: "pointer",
 			verticalAlign: "bottom",
 			horizontalAlign: "center",
 			dockInsidePlotArea: false,
-			itemclick: toogleDataSeries
+			
+			itemclick: function (e) {
+                if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                    e.dataSeries.visible = false;
+                } else {
+                    e.dataSeries.visible = true;
+                }
+ 
+                e.chart.render();
+            }
 		},
-		
 		data: [
+		{//Max Urban Line
+			type: "line",
+			axisXIndex:0,
+			axisYType: "primary",
+			name: "MAX",
+			lineThickness:2,
+			//lineColor: 'black',
+			showInLegend: true,
+			markerSize: 0,
+			yValueFormatString: "####.####",
+			dataPoints: retrieveDataPoints(maxUrbanDataPoints)//reading data from the 3rd column
+		},
 		{//Urban Line
 			type: "line",
 			axisXIndex:0,
 			axisYType: "primary",
-			name: lineOneLabel,
+			name: "MEAN",
 			lineThickness:2,
 			//lineColor: 'black',
 			showInLegend: true,
@@ -449,31 +503,46 @@ function processData(){
 			yValueFormatString: "####.####",
 			dataPoints: getDataPointsFromCSV(data, 2)//reading data from the 3rd column
 		},
-		{//Slope Urban Line
-			type:"line",
+		{//Min Urban Line
+			type: "line",
 			axisXIndex:0,
 			axisYType: "primary",
-			name: "Slope Urban",
-			lineThickness: 0,
-			//showInLegend: true,
-			lineColor: 'white',//to camoflague the line with the background
-			highlightEnabled: false,//to disable the highlight on mouse over
-			markerSize:0,
+			name: "MIN",
+			lineThickness:2,
+			//lineColor: 'black',
+			showInLegend: true,
+			markerSize: 0,
 			yValueFormatString: "####.####",
-			dataPoints: parseUrbanDataPoints()
+			dataPoints: retrieveDataPoints(minUrbanDataPoints)//reading data from the 3rd column
+		},
+		{//Yearly Max Points
+			type:"scatter",
+			axisXIndex:1,
+			axisYType: "primary",
+			name: "Yearly Max",
+			showInLegend: true,
+			yValueFormatString: "####.####",
+			dataPoints: retrieveYearlyDataPoints(yearlyMaxUrban)
 		},
 		{//Yearly Mean Points
-			type:"line",
-			lineColor: "#000000",
+			type:"scatter",
 			axisXIndex:1,
-			lineThickness:1,
 			axisYType: "primary",
-			name: "Yearly Mean Points",
-			lineDashType: "dot",
+			name: "Yearly Mean ",
 			showInLegend: true,
 			yValueFormatString: "####.####",
 			dataPoints: parseYearlyMeanPointsUrban()
-		}]
+		},
+		{//Yearly Min Points
+			type:"scatter",
+			axisXIndex:1,
+			axisYType: "primary",
+			name: "Yearly Min",
+			showInLegend: true,
+			yValueFormatString: "####.####",
+			dataPoints: retrieveYearlyDataPoints(yearlyMinUrban)
+		},
+		]
 	});
 
 	var chartSubHeading4="";
@@ -534,7 +603,7 @@ function processData(){
 		else
 			chartSubHeading6=" NON SIGNIFICANT";
 	}
-
+		significanceNonUrbanMonthly=chartSubHeading6;
 		chart2 = new CanvasJS.Chart("chartContainer6", {
 		title: {
 			text: "Non Urban:"+chartHeading,
@@ -579,7 +648,7 @@ function processData(){
   			intervalType: "month",
 		},
 		{
-          title: "Years",
+          title: " ",
           lineColor: "#ffffff",
           tickLength: 1,
           valueFormatString: "YYYY",
@@ -594,62 +663,80 @@ function processData(){
 		},
 		toolTip: {
 			shared: true,
-			/*
-			contentFormatter: function (e) {
-				var content = " ";
-				for (var i = 0; i < e.entries.length; i++) {
-					content += month[e.entries[i].dataPoint.x.getMonth()] +" "+ e.entries[i].dataPoint.x.getFullYear() + " " ;
-					content+="<strong> "+e.entries[i].dataSeries.name+": " + e.entries[i].dataPoint.y + "</strong>";
-
-					content += "<br/>";
-				}
-				return content;
-				
-			},
-			*/	
 		},
 		legend: {
 			cursor: "pointer",
 			verticalAlign: "bottom",
 			horizontalAlign: "center",
 			dockInsidePlotArea: false,
-			itemclick: toogleDataSeries
+			itemclick: function (e) {
+                if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                    e.dataSeries.visible = false;
+                } else {
+                    e.dataSeries.visible = true;
+                }
+ 
+                e.chart.render();
+            }
 		},
 		
 		data: [
+		{//Non Urban Max Line
+			type: "line",
+			axisYType: "primary",
+			name: "MAX",
+			lineThickness:2,
+			showInLegend: true,
+			markerSize: 0,
+			yValueFormatString: "####.####",
+			dataPoints: retrieveDataPoints(maxNonUrbanDataPoints),
+		},
 		{//Non Urban Line
 			type: "line",
 			axisYType: "primary",
-			name: lineTwoLabel,
+			name: "MEAN",
 			lineThickness:2,
 			showInLegend: true,
 			markerSize: 0,
 			yValueFormatString: "####.####",
 			dataPoints: getDataPointsFromCSV(data, 3)
 		},
-		{//Slope Non Urban Line
-			type:"line",
+		{//Non Urban Min Line
+			type: "line",
 			axisYType: "primary",
-			name: "Slope Non Urban",
-			lineThickness: 0,
-			//showInLegend: true,
-			lineColor: 'white',//to camoflague the line with the background
-			highlightEnabled: false,//to disable the highlight on mouse over
-			markerSize:0,
+			name: "MIN",
+			lineThickness:2,
+			showInLegend: true,
+			markerSize: 0,
 			yValueFormatString: "####.####",
-			dataPoints: parseNonUrbanDataPoints()
+			dataPoints: retrieveDataPoints(minNonUrbanDataPoints),
+		},
+		{//Yearly Max Points
+			type:"scatter",
+			axisXIndex:1,
+			axisYType: "primary",
+			name: "Yearly Max",
+			showInLegend: true,
+			yValueFormatString: "####.####",
+			dataPoints: retrieveYearlyDataPoints(yearlyMaxNonUrban),
 		},
 		{//Yearly Mean Points
-			type:"line",
-			lineColor: "#000000",
+			type:"scatter",
 			axisXIndex:1,
-			lineThickness:1,
 			axisYType: "primary",
-			name: "Yearly Mean Points",
-			lineDashType: "dot",
+			name: "Yearly Mean ",
 			showInLegend: true,
 			yValueFormatString: "####.####",
 			dataPoints: parseYearlyMeanPointsNonUrban()
+		},
+		{//Yearly Min Points
+			type:"scatter",
+			axisXIndex:1,
+			axisYType: "primary",
+			name: "Yearly Min",
+			showInLegend: true,
+			yValueFormatString: "####.####",
+			dataPoints: retrieveYearlyDataPoints(yearlyMinNonUrban),
 		}
 		]
 	});
@@ -698,29 +785,30 @@ function getDataPointsFromFile(csv,index){
 				yearForReference.push(parseInt(points[1]));
 		}
 	}
+	csvLines = csv.split(/[\r?\n|\r|\n]+/);
 	for(var i=1;i<csvLines.length;i++)
 	{
 		if(csvLines[i].length>0)
 		{
 			points=csvLines[i].split(",");
-			if(points[0]!="")
+			if(points[0]!=""&&points[0].toUpperCase()!="YEAR")
 				typeOfSeason=points[0].toUpperCase();
-			if(typeOfSeason=="DJF")
+			if(typeOfSeason=="DJF"&&parseFloat("0"+points[1])>0)
 			{
 				djfUrbanData.push(parseFloat(points[2]));
 				djfNonUrbanData.push(parseFloat(points[3]));
 			}
-			else if(typeOfSeason=="MAM")
+			else if(typeOfSeason=="MAM"&&parseFloat("0"+points[1])>0)
 			{
 				mamUrbanData.push(parseFloat(points[2]));
 				mamNonUrbanData.push(parseFloat(points[3]));
 			}
-			else if(typeOfSeason=="JJA")
+			else if(typeOfSeason=="JJA"&&parseFloat("0"+points[1])>0)
 			{
 				jjaUrbanData.push(parseFloat(points[2]));
 				jjaNonUrbanData.push(parseFloat(points[3]));
 			}
-			else if(typeOfSeason=="SON")
+			else if(typeOfSeason=="SON"&&parseFloat("0"+points[1])>0)
 			{
 				sonUrbanData.push(parseFloat(points[2]));
 				sonNonUrbanData.push(parseFloat(points[3]));
@@ -1065,10 +1153,7 @@ function calcDataForSeasonalAnalysis(){
 				SdjfUrban+=1;
 			else if((djfUrbanData[j]-djfUrbanData[i])<0)
 				SdjfUrban-=1;
-		}
-	for(var i=0;i<djfNonUrbanData.length;i++)
-		for(var j=i+1;j<djfNonUrbanData.length;j++)
-		{
+
 			if((djfNonUrbanData[j]-djfNonUrbanData[i])>0)
 				SdjfNonUrban+=1;
 			else if((djfNonUrbanData[j]-djfNonUrbanData[i])<0)
@@ -1081,10 +1166,7 @@ function calcDataForSeasonalAnalysis(){
 				SmamUrban+=1;
 			else if((mamUrbanData[j]-mamUrbanData[i])<0)
 				SmamUrban-=1;
-		}
-	for(var i=0;i<mamNonUrbanData.length;i++)
-		for(var j=i+1;j<mamNonUrbanData.length;j++)
-		{
+
 			if((mamNonUrbanData[j]-mamNonUrbanData[i])>0)
 				SmamNonUrban+=1;
 			else if((mamNonUrbanData[j]-mamNonUrbanData[i])<0)
@@ -1097,10 +1179,7 @@ function calcDataForSeasonalAnalysis(){
 				SjjaUrban+=1;
 			else if((jjaUrbanData[j]-jjaUrbanData[i])<0)
 				SjjaUrban-=1;
-		}
-	for(var i=0;i<jjaNonUrbanData.length;i++)
-		for(var j=i+1;j<jjaNonUrbanData.length;j++)
-		{
+
 			if((jjaNonUrbanData[j]-jjaNonUrbanData[i])>0)
 				SjjaNonUrban+=1;
 			else if((jjaNonUrbanData[j]-jjaNonUrbanData[i])<0)
@@ -1113,10 +1192,7 @@ function calcDataForSeasonalAnalysis(){
 				SsonUrban+=1;
 			else if((sonUrbanData[j]-sonUrbanData[i])<0)
 				SsonUrban-=1;
-		}
-	for(var i=0;i<sonNonUrbanData.length;i++)
-		for(var j=i+1;j<sonNonUrbanData.length;j++)
-		{
+
 			if((sonNonUrbanData[j]-sonNonUrbanData[i])>0)
 				SsonNonUrban+=1;
 			else if((sonNonUrbanData[j]-sonNonUrbanData[i])<0)
@@ -1147,9 +1223,10 @@ function calcDataForSeasonalAnalysis(){
 	}
 	for(var i=0;i<sonUrbanData.length;i++)
 	{
-		tempsonUrbanData.push(sonUrbanData[i]);
-		tempsonNonUrbanData.push(sonNonUrbanData[i]);
+		tempsonUrbanData.push(parseFloat(sonUrbanData[i]));
+		tempsonNonUrbanData.push(parseFloat(sonNonUrbanData[i]));
 	}
+
 	//Sort the data using temp arrays
 	tempdjfUrbanData.sort();
 	tempdjfNonUrbanData.sort();
@@ -1420,7 +1497,7 @@ function calcDataForSeasonalAnalysis(){
 		for(var j=i+1;j<djfUrbanData.length;j++)
 		{
 			var dk=(djfUrbanData[j]-djfUrbanData[i])/(j-i);
-			sendjfUrbanData.push(dk);
+			sendjfUrbanData.push(parseFloat(dk));
 		}
 	}
 	sendjfUrbanData.sort(
@@ -1431,36 +1508,12 @@ function calcDataForSeasonalAnalysis(){
 	temp=sendjfUrbanData.length;
 	if(temp%2==0)//even case
 	{
-
-		slopeSendjfUrbanData=(sendjfUrbanData[(temp/2)-1]+sendjfUrbanData[temp/2])/2;
-		if(slopeSendjfUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<sendjfUrbanData.length;i++)
-				{
-					if(sendjfUrbanData[i].toString()!="NaN")
-					{
-						slopeSendjfUrbanData=sendjfUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSendjfUrbanData=(sendjfUrbanData[parseInt((temp-2)/2)]+sendjfUrbanData[parseInt(temp/2)])/2;
 	}
 	else//odd case
 	{
-		slopeSendjfUrbanData=sendjfUrbanData[temp/2];
-		if(slopeSendjfUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<sendjfUrbanData.length;i++)
-				{
-					if(sendjfUrbanData[i].toString()!="NaN")
-					{
-						slopeSendjfUrbanData=sendjfUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSendjfUrbanData=sendjfUrbanData[parseInt(temp/2)];
 	}
-
 	var sendjfNonUrbanData=[];
 	for(var i=0;i<djfNonUrbanData.length;i++)
 	{
@@ -1478,33 +1531,11 @@ function calcDataForSeasonalAnalysis(){
 	temp=sendjfNonUrbanData.length;
 	if(temp%2==0)//even case
 	{
-		slopeSendjfNonUrbanData=(sendjfNonUrbanData[(temp/2)-1]+sendjfNonUrbanData[temp/2])/2;
-		if(slopeSendjfNonUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<sendjfNonUrbanData.length;i++)
-				{
-					if(sendjfNonUrbanData[i].toString()!="NaN")
-					{
-						slopeSendjfNonUrbanData=sendjfNonUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSendjfNonUrbanData=(sendjfNonUrbanData[parseInt((temp/2)-1)]+sendjfNonUrbanData[parseInt(temp/2)])/2;
 	}
 	else//odd case
 	{
-		slopeSendjfNonUrbanData=sendjfNonUrbanData[temp/2];
-		if(slopeSendjfNonUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<sendjfNonUrbanData.length;i++)
-				{
-					if(sendjfNonUrbanData[i].toString()!="NaN")
-					{
-						slopeSendjfNonUrbanData=sendjfNonUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSendjfNonUrbanData=sendjfNonUrbanData[parseInt(temp/2)];
 	}
 
 	//for MAM
@@ -1525,34 +1556,11 @@ function calcDataForSeasonalAnalysis(){
 	temp=senmamUrbanData.length;
 	if(temp%2==0)//even case
 	{
-
-		slopeSenmamUrbanData=(senmamUrbanData[(temp/2)-1]+senmamUrbanData[temp/2])/2;
-		if(slopeSenmamUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<senmamUrbanData.length;i++)
-				{
-					if(senmamUrbanData[i].toString()!="NaN")
-					{
-						slopeSenmamUrbanData=senmamUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSenmamUrbanData=(senmamUrbanData[parseInt((temp/2)-1)]+senmamUrbanData[parseInt(temp/2)])/2;
 	}
 	else//odd case
 	{
-		slopeSenmamUrbanData=senmamUrbanData[temp/2];
-		if(slopeSenmamUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<senmamUrbanData.length;i++)
-				{
-					if(senmamUrbanData[i].toString()!="NaN")
-					{
-						slopeSenmamUrbanData=senmamUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSenmamUrbanData=senmamUrbanData[parseInt(temp/2)];
 	}
 
 	var senmamNonUrbanData=[];
@@ -1572,33 +1580,11 @@ function calcDataForSeasonalAnalysis(){
 	temp=senmamNonUrbanData.length;
 	if(temp%2==0)//even case
 	{
-		slopeSenmamNonUrbanData=(senmamNonUrbanData[(temp/2)-1]+senmamNonUrbanData[temp/2])/2;
-		if(slopeSenmamNonUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<senmamNonUrbanData.length;i++)
-				{
-					if(senmamNonUrbanData[i].toString()!="NaN")
-					{
-						slopeSenmamNonUrbanData=senmamNonUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSenmamNonUrbanData=(senmamNonUrbanData[parseInt((temp/2)-1)]+senmamNonUrbanData[parseInt(temp/2)])/2;
 	}
 	else//odd case
 	{
-		slopeSenmamNonUrbanData=senmamNonUrbanData[temp/2];
-		if(slopeSenmamNonUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<senmamNonUrbanData.length;i++)
-				{
-					if(senmamNonUrbanData[i].toString()!="NaN")
-					{
-						slopeSenmamNonUrbanData=senmamNonUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSenmamNonUrbanData=senmamNonUrbanData[parseInt(temp/2)];
 	}
 	//for JJA
 	var senjjaUrbanData=[];
@@ -1618,36 +1604,12 @@ function calcDataForSeasonalAnalysis(){
 	temp=senjjaUrbanData.length;
 	if(temp%2==0)//even case
 	{
-
-		slopeSenjjaUrbanData=(senjjaUrbanData[(temp/2)-1]+senjjaUrbanData[temp/2])/2;
-		if(slopeSenjjaUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<senjjaUrbanData.length;i++)
-				{
-					if(senjjaUrbanData[i].toString()!="NaN")
-					{
-						slopeSenjjaUrbanData=senjjaUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSenjjaUrbanData=(senjjaUrbanData[parseInt((temp/2)-1)]+senjjaUrbanData[parseInt(temp/2)])/2;
 	}
 	else//odd case
 	{
-		slopeSenjjaUrbanData=senjjaUrbanData[temp/2];
-		if(slopeSenjjaUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<senjjaUrbanData.length;i++)
-				{
-					if(senjjaUrbanData[i].toString()!="NaN")
-					{
-						slopeSenjjaUrbanData=senjjaUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSenjjaUrbanData=senjjaUrbanData[parseInt(temp/2)];
 	}
-
 	var senjjaNonUrbanData=[];
 	for(var i=0;i<jjaNonUrbanData.length;i++)
 	{
@@ -1665,33 +1627,11 @@ function calcDataForSeasonalAnalysis(){
 	temp=senjjaNonUrbanData.length;
 	if(temp%2==0)//even case
 	{
-		slopeSenjjaNonUrbanData=(senjjaNonUrbanData[(temp/2)-1]+senjjaNonUrbanData[temp/2])/2;
-		if(slopeSenjjaNonUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<senjjaNonUrbanData.length;i++)
-				{
-					if(senjjaNonUrbanData[i].toString()!="NaN")
-					{
-						slopeSenjjaNonUrbanData=senjjaNonUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSenjjaNonUrbanData=(senjjaNonUrbanData[parseInt((temp/2)-1)]+senjjaNonUrbanData[parseInt(temp/2)])/2;
 	}
 	else//odd case
 	{
-		slopeSenjjaNonUrbanData=senjjaNonUrbanData[temp/2];
-		if(slopeSenjjaNonUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<senjjaNonUrbanData.length;i++)
-				{
-					if(senjjaNonUrbanData[i].toString()!="NaN")
-					{
-						slopeSenjjaNonUrbanData=senjjaNonUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSenjjaNonUrbanData=senjjaNonUrbanData[parseInt(temp/2)];
 	}
 	//For SON
 	var sensonUrbanData=[];
@@ -1699,8 +1639,8 @@ function calcDataForSeasonalAnalysis(){
 	{
 		for(var j=i+1;j<sonUrbanData.length;j++)
 		{
-			var dk=(sonUrbanData[j]-sonUrbanData[i])/(j-i);
-			sensonUrbanData.push(dk);
+			var dk=(parseFloat(sonUrbanData[j])-parseFloat(sonUrbanData[i]))/(j-i);
+			sensonUrbanData.push(parseFloat("0"+dk));
 		}
 	}
 	sensonUrbanData.sort(
@@ -1712,33 +1652,11 @@ function calcDataForSeasonalAnalysis(){
 	if(temp%2==0)//even case
 	{
 
-		slopeSensonUrbanData=(sensonUrbanData[(temp/2)-1]+sensonUrbanData[temp/2])/2;
-		if(slopeSensonUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<sensonUrbanData.length;i++)
-				{
-					if(sensonUrbanData[i].toString()!="NaN")
-					{
-						slopeSensonUrbanData=sensonUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSensonUrbanData=(sensonUrbanData[parseInt((temp/2)-1)]+sensonUrbanData[parseInt(temp/2)])/2;
 	}
 	else//odd case
 	{
-		slopeSensonUrbanData=sensonUrbanData[temp/2];
-		if((slopeSensonUrbanData+"").toString()=="NaN")
-			{
-				for(var i=temp/2;i<sensonUrbanData.length;i++)
-				{
-					if(sensonUrbanData[i].toString()!="NaN")
-					{
-						slopeSensonUrbanData=sensonUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSensonUrbanData=sensonUrbanData[parseInt(temp/2)];
 	}
 
 	var sensonNonUrbanData=[];
@@ -1758,33 +1676,11 @@ function calcDataForSeasonalAnalysis(){
 	temp=sensonNonUrbanData.length;
 	if(temp%2==0)//even case
 	{
-		slopeSensonNonUrbanData=(sensonNonUrbanData[(temp/2)-1]+sensonNonUrbanData[temp/2])/2;
-		if(slopeSensonNonUrbanData.toString()=="NaN")
-			{
-				for(var i=temp/2;i<sensonNonUrbanData.length;i++)
-				{
-					if(sensonNonUrbanData[i].toString()!="NaN")
-					{
-						slopeSensonNonUrbanData=sensonNonUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSensonNonUrbanData=(sensonNonUrbanData[parseInt((temp/2)-1)]+sensonNonUrbanData[parseInt(temp/2)])/2;
 	}
 	else//odd case
 	{
-		slopeSensonNonUrbanData=sensonNonUrbanData[temp/2];
-		if((slopeSensonNonUrbanData+"").toString()=="NaN")
-			{
-				for(var i=temp/2;i<sensonNonUrbanData.length;i++)
-				{
-					if(sensonNonUrbanData[i].toString()!="NaN")
-					{
-						slopeSensonNonUrbanData=sensonNonUrbanData[i];
-						break;
-					}
-				}
-			}
+		slopeSensonNonUrbanData=sensonNonUrbanData[parseInt(temp/2)];
 	}
 }
 function processData2(){
@@ -1794,6 +1690,26 @@ function processData2(){
 			getDataPointsFromFile(data,0);//data initialisation in the arrays
 			calcS();
 			calcDataForSeasonalAnalysis();
+			if(PdjfUrban<0.001||PdjfUrban<0.01||PdjfUrban<0.05||PdjfUrban<0.1)
+			{
+				if(PdjfUrban<0.001)
+				{
+					significancedjfUrbanMonthly="SIGNIFICANT 99.9%";
+				}
+				else if(PdjfUrban<0.01)
+				{
+					significancedjfUrbanMonthly="SIGNIFICANT 99%";
+				}
+				else if(PdjfUrban<0.05)
+				{
+					significancedjfUrbanMonthly="SIGNIFICANT 95%";
+				}	
+				else
+					significancedjfUrbanMonthly="SIGNIFICANT 90%";
+					
+			}
+			else
+				significancedjfUrbanMonthly=" NON SIGNIFICANT";
 			chartDJFUrban=new CanvasJS.Chart("chartContainer2",
 			{
 				title:
@@ -1802,7 +1718,30 @@ function processData2(){
 				},
 				subtitles:[
 				{
-					text: "This is a Subtitle",
+					text: "P: "+PdjfUrban.toPrecision(4),
+					fontStyle: "normal",
+					fontWeight: "normal",
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Z: "+ZdjfUrban.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Sens Slope: "+parseFloat(slopeSendjfUrbanData).toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:significancedjfUrbanMonthly,
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:true,
 				}
 				],
 				exportEnabled: true,
@@ -1854,12 +1793,60 @@ function processData2(){
 					}
 				]
 			});
+			if(PmamUrban<0.001||PmamUrban<0.01||PmamUrban<0.05||PmamUrban<0.1)
+			{
+				if(PmamUrban<0.001)
+				{
+					significancemamUrbanMonthly="SIGNIFICANT 99.9%";
+				}
+				else if(PmamUrban<0.01)
+				{
+					significancemamUrbanMonthly="SIGNIFICANT 99%";
+				}
+				else if(PmamUrban<0.05)
+				{
+					significancemamUrbanMonthly="SIGNIFICANT 95%";
+				}	
+				else
+					significancemamUrbanMonthly="SIGNIFICANT 90%";
+					
+			}
+			else
+				significancemamUrbanMonthly=" NON SIGNIFICANT";
 			chartMAMUrban = new CanvasJS.Chart("chartContainer3",
 			{
 				title:
 				{
 					text: "Urban:MAM:"+chartHeading.toUpperCase()
 				},
+				subtitles:[
+				{
+					text: "P: "+PmamUrban.toPrecision(4),
+					fontStyle: "normal",
+					fontWeight: "normal",
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Z: "+ZmamUrban.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Sens Slope: "+parseFloat(slopeSenmamUrbanData).toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:significancemamUrbanMonthly,
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:true,
+				}
+				],
 				exportEnabled: true,
 				zoomEnabled: true,
 				backgroundColor: "#FFFFFF",
@@ -1909,12 +1896,60 @@ function processData2(){
 					}
 				]
 			});
+			if(PjjaUrban<0.001||PjjaUrban<0.01||PjjaUrban<0.05||PjjaUrban<0.1)
+			{
+				if(PjjaUrban<0.001)
+				{
+					significancejjaUrbanMonthly="SIGNIFICANT 99.9%";
+				}
+				else if(PjjaUrban<0.01)
+				{
+					significancejjaUrbanMonthly="SIGNIFICANT 99%";
+				}
+				else if(PjjaUrban<0.05)
+				{
+					significancejjaUrbanMonthly="SIGNIFICANT 95%";
+				}	
+				else
+					significancejjaUrbanMonthly="SIGNIFICANT 90%";
+					
+			}
+			else
+				significancejjaUrbanMonthly=" NON SIGNIFICANT";
 			chartJJAUrban = new CanvasJS.Chart("chartContainer4",
 			{
 				title:
 				{
 					text: "Urban:JJA:"+chartHeading.toUpperCase()
 				},
+				subtitles:[
+				{
+					text: "P: "+PjjaUrban.toPrecision(4),
+					fontStyle: "normal",
+					fontWeight: "normal",
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Z: "+ZjjaUrban.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Sens Slope: "+parseFloat(slopeSenjjaUrbanData).toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:significancejjaUrbanMonthly,
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:true,
+				}
+				],
 				exportEnabled: true,
 				zoomEnabled: true,
 				backgroundColor: "#FFFFFF",
@@ -1963,12 +1998,60 @@ function processData2(){
 					}
 				]
 			});
+			if(PsonUrban<0.001||PsonUrban<0.01||PsonUrban<0.05||PsonUrban<0.1)
+			{
+				if(PsonUrban<0.001)
+				{
+					significancesonUrbanMonthly="SIGNIFICANT 99.9%";
+				}
+				else if(PsonUrban<0.01)
+				{
+					significancesonUrbanMonthly="SIGNIFICANT 99%";
+				}
+				else if(PsonUrban<0.05)
+				{
+					significancesonUrbanMonthly="SIGNIFICANT 95%";
+				}	
+				else
+					significancesonUrbanMonthly="SIGNIFICANT 90%";
+					
+			}
+			else
+				significancesonUrbanMonthly=" NON SIGNIFICANT";
 			chartSONUrban = new CanvasJS.Chart("chartContainer5",
 			{
 				title:
 				{
 					text: "Urban:SON:"+chartHeading.toUpperCase()
 				},
+				subtitles:[
+				{
+					text: "P: "+PsonUrban.toPrecision(4),
+					fontStyle: "normal",
+					fontWeight: "normal",
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Z: "+ZsonUrban.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Sens Slope: "+slopeSensonUrbanData.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:significancesonUrbanMonthly,
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:true,
+				}
+				],
 				exportEnabled: true,
 				zoomEnabled: true,
 				backgroundColor: "#FFFFFF",
@@ -2017,6 +2100,25 @@ function processData2(){
 					}
 				]
 			});
+			if(PdjfNonUrban<0.1)
+			{
+				if(PdjfNonUrban<0.001)
+				{
+					significancedjfNonUrbanMonthly="SIGNIFICANT 99.9%";
+				}
+				else if(PdjfNonUrban<0.01)
+				{
+					significancedjfNonUrbanMonthly="SIGNIFICANT 99%";
+				}
+				else if(PdjfNonUrban<0.05)
+				{
+					significancedjfNonUrbanMonthly="SIGNIFICANT 95%";
+				}	
+				else
+					significancedjfNonUrbanMonthly="SIGNIFICANT 90%";	
+			}
+			else
+				significancedjfNonUrbanMonthly=" NON SIGNIFICANT";
 			chartDJFNonUrban=new CanvasJS.Chart("chartContainer10",
 			{
 				title:
@@ -2025,7 +2127,30 @@ function processData2(){
 				},
 				subtitles:[
 				{
-					text: "This is a Subtitle",
+					text: "P: "+PdjfNonUrban.toPrecision(4),
+					fontStyle: "normal",
+					fontWeight: "normal",
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Z: "+ZdjfNonUrban.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Sens Slope: "+slopeSendjfNonUrbanData.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:significancedjfNonUrbanMonthly,
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:true,
 				}
 				],
 				exportEnabled: true,
@@ -2075,12 +2200,59 @@ function processData2(){
 						dataPoints: parseDjfNonUrbanDataPoints()
 					}]
 			});
+			if(PmamNonUrban<0.1)
+			{
+				if(PmamNonUrban<0.001)
+				{
+					significancemamNonUrbanMonthly="SIGNIFICANT 99.9%";
+				}
+				else if(PmamNonUrban<0.01)
+				{
+					significancemamNonUrbanMonthly="SIGNIFICANT 99%";
+				}
+				else if(PmamNonUrban<0.05)
+				{
+					significancemamNonUrbanMonthly="SIGNIFICANT 95%";
+				}	
+				else
+					significancemamNonUrbanMonthly="SIGNIFICANT 90%";	
+			}
+			else
+				significancemamNonUrbanMonthly=" NON SIGNIFICANT";
 			chartMAMNonUrban = new CanvasJS.Chart("chartContainer11",
 			{
 				title:
 				{
 					text: "Non Urban:MAM:"+chartHeading.toUpperCase()
 				},
+				subtitles:[
+				{
+					text: "P: "+PmamNonUrban.toPrecision(4),
+					fontStyle: "normal",
+					fontWeight: "normal",
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Z: "+ZmamNonUrban.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Sens Slope: "+slopeSenmamNonUrbanData.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:significancemamNonUrbanMonthly,
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:true,
+				}
+				],
 				exportEnabled: true,
 				zoomEnabled: true,
 				backgroundColor: "#FFFFFF",
@@ -2130,12 +2302,59 @@ function processData2(){
 					}
 				]
 			});
+			if(PjjaNonUrban<0.1)
+			{
+				if(PjjaNonUrban<0.001)
+				{
+					significancejjaNonUrbanMonthly="SIGNIFICANT 99.9%";
+				}
+				else if(PjjaNonUrban<0.01)
+				{
+					significancejjaNonUrbanMonthly="SIGNIFICANT 99%";
+				}
+				else if(PjjaNonUrban<0.05)
+				{
+					significancejjaNonUrbanMonthly="SIGNIFICANT 95%";
+				}	
+				else
+					significancejjaNonUrbanMonthly="SIGNIFICANT 90%";	
+			}
+			else
+				significancejjaNonUrbanMonthly=" NON SIGNIFICANT";
 			chartJJANonUrban = new CanvasJS.Chart("chartContainer12",
 			{
 				title:
 				{
 					text: "Non Urban:JJA:"+chartHeading.toUpperCase()
 				},
+				subtitles:[
+				{
+					text: "P: "+PjjaNonUrban.toPrecision(4),
+					fontStyle: "normal",
+					fontWeight: "normal",
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Z: "+ZjjaNonUrban.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Sens Slope: "+slopeSenjjaNonUrbanData.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:significancejjaNonUrbanMonthly,
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:true,
+				}
+				],
 				exportEnabled: true,
 				zoomEnabled: true,
 				backgroundColor: "#FFFFFF",
@@ -2183,12 +2402,59 @@ function processData2(){
 						dataPoints: parseJjaNonUrbanDataPoints()
 					}]
 			});
+			if(PsonNonUrban<0.1)
+			{
+				if(PsonNonUrban<0.001)
+				{
+					significancesonNonUrbanMonthly="SIGNIFICANT 99.9%";
+				}
+				else if(PsonNonUrban<0.01)
+				{
+					significancesonNonUrbanMonthly="SIGNIFICANT 99%";
+				}
+				else if(PsonNonUrban<0.05)
+				{
+					significancesonNonUrbanMonthly="SIGNIFICANT 95%";
+				}	
+				else
+					significancesonNonUrbanMonthly="SIGNIFICANT 90%";	
+			}
+			else
+				significancesonNonUrbanMonthly=" NON SIGNIFICANT";
 			chartSONNonUrban = new CanvasJS.Chart("chartContainer13",
 			{
 				title:
 				{
 					text: "Non Urban:SON:"+chartHeading.toUpperCase()
 				},
+				subtitles:[
+				{
+					text: "P: "+PsonNonUrban.toPrecision(4),
+					fontStyle: "normal",
+					fontWeight: "normal",
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Z: "+ZsonNonUrban.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:"Sens Slope: "+slopeSensonNonUrbanData.toPrecision(4),
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:false,
+				},
+				{
+					text:significancesonNonUrbanMonthly,
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					dockInsidePlotArea:true,
+				}
+				],
 				exportEnabled: true,
 				zoomEnabled: true,
 				backgroundColor: "#FFFFFF",
@@ -2465,4 +2731,90 @@ function toogleDataSeries(e){
 			e.dataSeries.visible = true;
 		}
 		chart.render();	
+}
+function addDataToTable(){//add urban as well as non urban data
+
+	var table = document.getElementById("MonthlyComparisonTableUrban1");
+	var row = table.insertRow();
+	row.class="row100 body";
+	var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
+	var cell3 = row.insertCell(2);
+	var cell4 = row.insertCell(3);
+	var cell5 = row.insertCell(4);
+	cell1.innerHTML = "URBAN: &nbsp &nbsp "+fileNameMonthly.substring(10,fileNameMonthly.length-4);
+	cell2.innerHTML = PUrban.toPrecision(4);
+	cell3.innerHTML = ZUrban.toPrecision(4);
+	cell4.innerHTML = slopeSenUrbanData.toPrecision(4);
+	cell5.innerHTML = significanceUrbanMonthly;
+
+	table = document.getElementById("MonthlyComparisonTableNonUrban1");
+	row = table.insertRow();
+	row.class="row100 body";
+	cell1 = row.insertCell(0);
+	cell2 = row.insertCell(1);
+	cell3 = row.insertCell(2);
+	cell4 = row.insertCell(3);
+	cell5 = row.insertCell(4);
+	cell1.innerHTML = "NON URBAN: "+fileNameMonthly.substring(10,fileNameMonthly.length-4);
+	cell2.innerHTML = PNonUrban.toPrecision(4);
+	cell3.innerHTML = ZNonUrban.toPrecision(4);
+	cell4.innerHTML = slopeSenNonUrbanData.toPrecision(4);
+	cell5.innerHTML = significanceNonUrbanMonthly;}
+function addDataToSeasonalTable(){
+	var table = document.getElementById("DJFComparison1");
+	var row = table.insertRow();
+	row.class="row100 body";
+	var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
+	var cell3 = row.insertCell(2);
+	var cell4 = row.insertCell(3);
+	var cell5 = row.insertCell(4);
+	cell1.innerHTML = "URBAN: &nbsp &nbsp "+fileNameSeasonal.substring(10,fileNameSeasonal.length-4);
+	cell2.innerHTML = PdjfUrban.toPrecision(4);
+	cell3.innerHTML = ZdjfUrban.toPrecision(4);
+	cell4.innerHTML = slopeSendjfUrbanData.toPrecision(4);
+	cell5.innerHTML = significancedjfUrbanMonthly;
+
+	table = document.getElementById("MAMComparison1");
+	row = table.insertRow();
+	row.class="row100 body";
+	cell1 = row.insertCell(0);
+	cell2 = row.insertCell(1);
+	cell3 = row.insertCell(2);
+	cell4 = row.insertCell(3);
+	cell5 = row.insertCell(4);
+	cell1.innerHTML = "URBAN: &nbsp &nbsp "+fileNameSeasonal.substring(10,fileNameSeasonal.length-4);
+	cell2.innerHTML = PmamUrban.toPrecision(4);
+	cell3.innerHTML = ZmamUrban.toPrecision(4);
+	cell4.innerHTML = slopeSenmamUrbanData.toPrecision(4);
+	cell5.innerHTML = significancemamUrbanMonthly;
+
+	table = document.getElementById("JJAComparison1");
+	row = table.insertRow();
+	row.class="row100 body";
+	cell1 = row.insertCell(0);
+	cell2 = row.insertCell(1);
+	cell3 = row.insertCell(2);
+	cell4 = row.insertCell(3);
+	cell5 = row.insertCell(4);
+	cell1.innerHTML = "URBAN: &nbsp &nbsp "+fileNameSeasonal.substring(10,fileNameSeasonal.length-4);
+	cell2.innerHTML = PjjaUrban.toPrecision(4);
+	cell3.innerHTML = ZjjaUrban.toPrecision(4);
+	cell4.innerHTML = slopeSenjjaUrbanData.toPrecision(4);
+	cell5.innerHTML = significancejjaUrbanMonthly;
+
+	table = document.getElementById("SONComparison1");
+	row = table.insertRow();
+	row.class="row100 body";
+	cell1 = row.insertCell(0);
+	cell2 = row.insertCell(1);
+	cell3 = row.insertCell(2);
+	cell4 = row.insertCell(3);
+	cell5 = row.insertCell(4);
+	cell1.innerHTML = "URBAN: &nbsp &nbsp "+fileNameSeasonal.substring(10,fileNameSeasonal.length-4);
+	cell2.innerHTML = PsonUrban.toPrecision(4);
+	cell3.innerHTML = ZsonUrban.toPrecision(4);
+	cell4.innerHTML = slopeSensonUrbanData.toPrecision(4);
+	cell5.innerHTML = significancesonUrbanMonthly;
 }
